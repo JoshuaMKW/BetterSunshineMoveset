@@ -25,9 +25,12 @@ extern bool processCrouch(TMario *);
 
 using namespace BetterSMS;
 
+static BetterSMS::ModuleInfo sModuleInfo{"Better Sunshine Moveset", 1, 0, &gSettingsGroup};
+
 static void initModule() {
     OSReport("Initializing Module...\n");
 
+    // Register settings
     gSettingsGroup.addSetting(&gLongJumpMappingSetting);
     gSettingsGroup.addSetting(&gLongJumpSetting);
     gSettingsGroup.addSetting(&gBackFlipSetting);
@@ -50,7 +53,9 @@ static void initModule() {
         saveInfo.mIconTable   = GetResourceTextureHeader(gSaveIcon);
         saveInfo.mSaveGlobal  = false;
     }
-    Settings::registerGroup("Better Sunshine Movement", &gSettingsGroup);
+
+    // Register module
+    BetterSMS::registerModule("Better Sunshine Movement", &sModuleInfo);
 
     // Register callbacks
     Player::registerInitProcess("__init_fast_turbo", initFastTurbo);
