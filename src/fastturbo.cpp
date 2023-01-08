@@ -144,6 +144,9 @@ void updateTurboContext(TMario *player, bool isMario) {
     if (fludd->mCurrentNozzle != TWaterGun::Turbo || !gFastTurboSetting.getBool())
         return;
 
+    if (fludd->mCurrentWater <= 0)
+        return;
+
     const auto analogR = player->mController->mButtons.mAnalogR;
 
     fludd->mNozzleTurbo.mEmitParams.mNum.set(lerp<f32>(1.0f, 10.0f, analogR));
