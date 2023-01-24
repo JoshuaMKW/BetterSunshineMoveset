@@ -11,7 +11,7 @@ file(GLOB BETTER_MOVESET_SRC
     "include/*.hxx"
 )
 
-add_executable(BetterSunshineMoveset ${BETTER_MOVESET_SRC} "src/rocketdive.cpp")
+add_executable(BetterSunshineMoveset ${BETTER_MOVESET_SRC})
 add_subdirectory(lib/BetterSunshineEngine)
 
 target_link_libraries(BetterSunshineMoveset PUBLIC BetterSunshineEngine)
@@ -21,7 +21,7 @@ target_include_directories(BetterSunshineMoveset PUBLIC "include")
 target_compile_options(BetterSunshineMoveset PUBLIC ${SMS_COMPILE_FLAGS})
 target_link_options(BetterSunshineMoveset PUBLIC ${SMS_LINK_FLAGS})
 
-list(APPEND BETTER_MOVESET_CONFIG_DEFINES "KURIBO_NO_TYPES" "BETTER_MOVESET_VERSION=\"v1.0\"")
+list(APPEND BETTER_MOVESET_CONFIG_DEFINES "KURIBO_NO_TYPES" "BETTER_MOVESET_VERSION=\"v1.1\"")
 
 target_compile_definitions(BetterSunshineMoveset PUBLIC ${BETTER_MOVESET_CONFIG_DEFINES})
 

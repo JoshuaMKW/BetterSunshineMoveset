@@ -161,7 +161,7 @@ void updateTurboContext(TMario *player, bool isMario) {
     player->mDeParams.mDashAcc.set(32.1f);  // 32.0f is max
 
     // Patch for bad land jumps
-    if (!(player->mState & TMario::STATE_AIRBORN) && !(player->mState & TMario::STATE_WATERBORN)) {
+    if (player->mState == TMario::STATE_RUNNING) {
         if ((player->mController->mButtons.mFrameInput & TMarioGamePad::A)) {
             int rotate;
             if (player->checkStickRotate(&rotate)) {

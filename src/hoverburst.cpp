@@ -5,49 +5,25 @@
 #include <SMS/MSound/MSoundSESystem.hxx>
 
 #include <BetterSMS/module.hxx>
+#include <BetterSMS/player.hxx>
 #include "common.hxx"
 
 using namespace BetterSMS;
 
-static bool sIsTriggerNozzleDead = false;
+// This patches delayed fludd usage
+static void snapNozzleToReady() {
+    TWaterGun *fludd;
+    SMS_FROM_GPR(30, fludd);
 
-static void checkExecWaterGun(TWaterGun *fludd) {
-    if (fludd->mCurrentNozzle != TWaterGun::Hover) {
-        fludd->emit();
-        return;
+    if (fludd->mCurrentNozzle == TWaterGun::TNozzleType::Hover) {
+        ((float *)(fludd))[0x1CEC / 4] = 0.0f;
+    } else {
+        ((float *)(fludd))[0x1CEC / 4] -= 0.1f;
+        if (((float *)(fludd))[0x1CEC / 4] < 0.0f)
+            ((float *)(fludd))[0x1CEC / 4] = 0.0f;
     }
-
-    if (!sIsTriggerNozzleDead)
-        fludd->emit();
 }
-SMS_PATCH_BL(SMS_PORT_REGION(0x8024E548, 0x802462D4, 0, 0), checkExecWaterGun);
-
-static void killTriggerNozzle() {
-    TNozzleTrigger *nozzle;
-    SMS_FROM_GPR(29, nozzle);
-
-    nozzle->mSprayState = TNozzleTrigger::DEAD;
-    if (nozzle->mFludd->mCurrentNozzle == TWaterGun::Hover && gHoverBurstSetting.getBool())
-        sIsTriggerNozzleDead = true;
-}
-SMS_PATCH_BL(SMS_PORT_REGION(0x8026C370, 0x802640FC, 0, 0), killTriggerNozzle);
-
-// 0x80262580
-// extern -> SME.cpp
-static bool checkAirNozzle() {
-    TMario *player;
-    SMS_FROM_GPR(31, player);
-
-    sIsTriggerNozzleDead &=
-        !SMS_IsMarioTouchGround4cm__Fv() && !SMS_IsMarioStatusTypeSwimming__Fv() && !(player->mState == TMario::STATE_NPC_BOUNCE);
-
-    if (player->mFludd->mCurrentNozzle != TWaterGun::Hover)
-        return player->mState != static_cast<u32>(TMario::STATE_HOVER_F);
-
-    return (!(player->mState & static_cast<u32>(TMario::STATE_AIRBORN)) || !sIsTriggerNozzleDead);
-}
-SMS_PATCH_BL(SMS_PORT_REGION(0x80262580, 0x8025A30C, 0, 0), checkAirNozzle);
-SMS_WRITE_32(SMS_PORT_REGION(0x80262584, 0x8025A310, 0, 0), 0x2C030000);
+SMS_PATCH_BL(SMS_PORT_REGION(0x802699CC, 0, 0, 0), snapNozzleToReady);
 
 // extern -> fluddgeneral.cpp
 void checkSpamHover(TMario *player, bool isMario) {
@@ -55,17 +31,28 @@ void checkSpamHover(TMario *player, bool isMario) {
     if (!fludd)
         return;
 
-    if ((player->mState & TMario::STATE_WATERBORN))
-        return;
-
     if (fludd->mCurrentNozzle != TWaterGun::Hover || !gHoverBurstSetting.getBool())
         return;
 
-    TNozzleTrigger *nozzle = reinterpret_cast<TNozzleTrigger *>(fludd->mNozzleList[fludd->mCurrentNozzle]);
+    TNozzleTrigger *nozzle =
+        reinterpret_cast<TNozzleTrigger *>(fludd->mNozzleList[fludd->mCurrentNozzle]);
     auto &emitParams = nozzle->mEmitParams;
 
     emitParams.mNum.set(1.0f);
     emitParams.mDirTremble.set(0.0f);
+
+    auto *playerData = Player::getData(player);
+    bool isAlive     = playerData->getCanSprayFludd();
+    isAlive |= SMS_IsMarioTouchGround4cm__Fv();
+    isAlive |= (player->mState & TMario::STATE_WATERBORN);
+    isAlive |= (player->mState == TMario::STATE_NPC_BOUNCE);
+    isAlive |= (player->mState == 0x350 || player->mState == 0x10000357 ||
+                player->mState == 0x10000358);  // Ropes
+    isAlive |= (player->mState == 0x10100341);  // Pole Climb
+    playerData->setCanSprayFludd(isAlive);
+
+    if ((player->mState & TMario::STATE_WATERBORN) || !playerData->getCanSprayFludd())
+        return;
 
     if (player->mController->mButtons.mAnalogR < 0.9f ||
         !(player->mController->mFrameMeaning & 0x80))
@@ -86,9 +73,18 @@ void checkSpamHover(TMario *player, bool isMario) {
     nozzle->mSprayState             = TNozzleTrigger::DEAD;
     nozzle->mFludd->mCurrentWater -= 255;
 
-    player->mSpeed.y += (70.0f * player->mSize.y) - player->mSpeed.y;
-    player->mJumpingState &= 0xFFFFFEFF;
+    if ((player->mState & 0x800000) == 0) {
+        player->mState = TMario::STATE_HOVER_F;
+        player->mSpeed.y += (70.0f * player->mScale.y) - player->mSpeed.y;
+        player->mJumpingState &= 0xFFFFFEFF;
+    } else if (player->mState == TMario::STATE_DIVE) {
+        player->mSpeed.y += (35.0f * player->mScale.y) - player->mSpeed.y;
+        player->mForwardSpeed += 15.0f;
+    } else if (player->mState == TMario::STATE_DIVESLIDE) {
+        player->mSpeed.y += (35.0f * player->mScale.y) - player->mSpeed.y;
+        player->mForwardSpeed += 30.0f;
+    }
 
-    sIsTriggerNozzleDead = true;
+    playerData->setCanSprayFludd(false);
     return;
 }

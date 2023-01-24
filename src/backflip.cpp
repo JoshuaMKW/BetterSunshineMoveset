@@ -43,7 +43,7 @@ void checkForCrouch(TMario *player, bool isMario) {
     if (!(controller->mMeaning & getCrouchAndLongJumpButtonMeaning()))
         return;
 
-    if ((player->mFloorTriangle->mCollisionType & 0x1FFF) == 7)
+    if ((player->mFloorTriangle->mType & 0x1FFF) == 7)
         return;
 
     player->changePlayerStatus(CrouchState, 0, false);
@@ -51,7 +51,7 @@ void checkForCrouch(TMario *player, bool isMario) {
 }
 
 bool processCrouch(TMario *player) {
-    if (player->mPosition.y - player->mFloorBelow > 10.0f) {
+    if (player->mTranslation.y - player->mFloorBelow > 10.0f) {
         player->changePlayerStatus(TMario::STATE_FALL, 0, false);
         return true;
     }
@@ -95,14 +95,14 @@ bool processCrouch(TMario *player) {
 
     // Check walls
     float normalThing = player->mFloorTriangle ? player->mFloorTriangle->mNormal.y : 0.0f;
-    TVec3f succ{player->mPosition.x + (player->mSpeed.x * normalThing * 0.25f), player->mPosition.y,
-                player->mPosition.z + (player->mSpeed.z * normalThing * 0.25f)};
+    TVec3f succ{player->mTranslation.x + (player->mSpeed.x * normalThing * 0.25f), player->mTranslation.y,
+                player->mTranslation.z + (player->mSpeed.z * normalThing * 0.25f)};
     player->checkGroundAtWalking(succ);
     player->checkCollision();
 
     player->mSpeed.y = 0;
     player->mSpeed.scale(0.95);
-    player->mPosition.add(player->mSpeed);
+    player->mTranslation.add(player->mSpeed);
     player->mForwardSpeed *= 0.95;
 
     player->setAnimation(TMario::ANIMATION_STEADY_STANCE, 1.0f);
