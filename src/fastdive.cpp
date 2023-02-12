@@ -16,9 +16,12 @@ static void uncapDiveSpeed(f32 diveSpeed) {
     TMario *player;
     SMS_FROM_GPR(30, player);
 
+    auto *playerData = Player::getData(player);
+
     if (gFastDiveSetting.getBool())
-        player->mForwardSpeed = Max(
-            48.0f, player->mForwardSpeed + ((player->mState & TMario::STATE_AIRBORN) ? 15.0f : 0));
+        player->mForwardSpeed =
+            Max(48.0f * playerData->getParams()->mSpeedMultiplier.get(),
+                player->mForwardSpeed + ((player->mState & TMario::STATE_AIRBORN) ? 15.0f : 0));
     else
         player->mForwardSpeed = 48.0f;
 }
