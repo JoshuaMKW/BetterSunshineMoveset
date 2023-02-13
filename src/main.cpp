@@ -28,8 +28,6 @@ using namespace BetterSMS;
 static BetterSMS::ModuleInfo sModuleInfo{"Better Sunshine Moveset", 1, 0, &gSettingsGroup};
 
 static void initModule() {
-    OSReport("Initializing Module...\n");
-
     // Register settings
     gSettingsGroup.addSetting(&gLongJumpMappingSetting);
     gSettingsGroup.addSetting(&gLongJumpSetting);
@@ -41,28 +39,28 @@ static void initModule() {
     gSettingsGroup.addSetting(&gFastDiveSetting);
     {
         auto &saveInfo        = gSettingsGroup.getSaveInfo();
-        saveInfo.mSaveName    = gSettingsGroup.getName();
+        saveInfo.mSaveName    = Settings::getGroupName(gSettingsGroup);
         saveInfo.mBlocks      = 1;
         saveInfo.mGameCode    = 'GMSB';
         saveInfo.mCompany     = 0x3031;  // '01'
         saveInfo.mBannerFmt   = CARD_BANNER_CI;
-        saveInfo.mBannerImage = GetResourceTextureHeader(gSaveBnr);
+        saveInfo.mBannerImage = reinterpret_cast<const ResTIMG *>(gSaveBnr);
         saveInfo.mIconFmt     = CARD_ICON_CI;
         saveInfo.mIconSpeed   = CARD_SPEED_FAST;
         saveInfo.mIconCount   = 2;
-        saveInfo.mIconTable   = GetResourceTextureHeader(gSaveIcon);
+        saveInfo.mIconTable   = reinterpret_cast<const ResTIMG *>(gSaveIcon);
         saveInfo.mSaveGlobal  = false;
     }
 
     // Register module
-    BetterSMS::registerModule("Better Sunshine Movement", &sModuleInfo);
+    BetterSMS::registerModule(&sModuleInfo);
 
     // Register callbacks
-    Player::registerInitProcess("__init_fast_turbo", initFastTurbo);
-    Player::registerUpdateProcess("__update_turbo_usage", updateTurboContext);
-    Player::registerUpdateProcess("__update_hover_burst", checkSpamHover);
-    Player::registerUpdateProcess("__update_rocket_dive", checkRocketNozzleDiveBlast);
-    Player::registerUpdateProcess("__update_mario_crouch", checkForCrouch);
+    Player::registerInitCallback("__init_fast_turbo", initFastTurbo);
+    Player::registerUpdateCallback("__update_turbo_usage", updateTurboContext);
+    Player::registerUpdateCallback("__update_hover_burst", checkSpamHover);
+    Player::registerUpdateCallback("__update_rocket_dive", checkRocketNozzleDiveBlast);
+    Player::registerUpdateCallback("__update_mario_crouch", checkForCrouch);
     Player::registerStateMachine(CrouchState, processCrouch);
 }
 
@@ -70,7 +68,7 @@ static void deinitModule() {
     OSReport("Deinitializing Module...\n");
 
     // Cleanup callbacks
-    Player::deregisterUpdateProcess("__update_mario_crouch");
+    Player::deregisterUpdateCallback("__update_mario_crouch");
     Player::deregisterStateMachine(CrouchState);
 }
 

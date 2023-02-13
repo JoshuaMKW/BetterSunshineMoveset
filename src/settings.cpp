@@ -1,7 +1,7 @@
 #include <Dolphin/types.h>
 #include "settings.hxx"
 
-Settings::SettingsGroup gSettingsGroup("Better Sunshine Moveset", 1, 0, Settings::Priority::MODE);
+Settings::SettingsGroup gSettingsGroup(1, 0, Settings::Priority::MODE);
 
 int LongJumpMappingSetting::sLongJumpValue = LongJumpMappingSetting::BUTTON_Z;
 LongJumpMappingSetting gLongJumpMappingSetting;

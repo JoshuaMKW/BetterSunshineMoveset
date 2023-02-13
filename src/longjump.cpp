@@ -49,21 +49,22 @@ static void setJumpOrLongJump(TMario *player, u32 state, u32 unk_0) {
     constexpr f32 LongJumpMinSpeed  = 10.0f;
 
     auto *playerData = Player::getData(player);
-    if (!playerData || !gLongJumpSetting.getBool()) {
+    playerData->mIsLongJumping = false;
+
+    if (!playerData || !gLongJumpSetting.getBool() ||
+        (player->mState & TMario::STATE_AIRBORN) != 0 ||
+        (player->mState & TMario::STATE_WATERBORN) != 0 ||
+        player->mState == TMario::STATE_DIVESLIDE || player->onYoshi() ||
+        player->mState == 0xF00001C1) /* Multi jump */ {
         player->setStatusToJumping(state, unk_0);
         return;
     }
+
     auto &buttons = player->mController->mButtons;
 
-    const bool isValidState =
-        !(player->mState & TMario::STATE_AIRBORN) &&
-                              !(player->mState & TMario::STATE_WATERBORN) && player->mState != TMario::STATE_DIVESLIDE &&
-                              !player->onYoshi();
-
-    playerData->mIsLongJumping = false;
     if ((player->mController->mMeaning & getCrouchAndLongJumpButtonMeaning()) &&
         (buttons.mFrameInput & TMarioGamePad::EButtons::A) &&
-        player->mForwardSpeed > LongJumpMinSpeed && isValidState) {
+        player->mForwardSpeed > LongJumpMinSpeed) {
         playerData->mIsLongJumping = playerData->isMario() && (player->mActionState & 0x8) == 0;
         state                      = TMario::STATE_JUMP;
     }
