@@ -71,7 +71,7 @@ static void deinitModule() {
     Player::deregisterUpdateCallback("__update_mario_crouch");
     Player::deregisterStateMachine(CrouchState);
 
-    BetterSMS::deregisterModule("Better Sunshine Moveset");
+    BetterSMS::deregisterModule(&sModuleInfo);
 }
 
 // Definition block
