@@ -59,7 +59,7 @@ static void initModule() {
     Player::registerUpdateCallback("_moveset_update_turbo_usage", updateTurboContext);
     Player::registerUpdateCallback("_moveset_update_hover_burst", checkSpamHover);
     Player::registerUpdateCallback("_moveset_update_rocket_dive", checkRocketNozzleDiveBlast);
-    OSReport("Registered successfully? %s\n", Player::registerUpdateCallback("_moveset_update_crouch", checkForCrouch) ? "YES" : "NO");
+    Player::registerUpdateCallback("_moveset_update_crouch", checkForCrouch);
     Player::registerStateMachine(CrouchState, processCrouch);
 }
 
