@@ -26,7 +26,7 @@ static void snapNozzleToReady() {
 SMS_PATCH_BL(SMS_PORT_REGION(0x802699CC, 0, 0, 0), snapNozzleToReady);
 
 // extern -> fluddgeneral.cpp
-void checkSpamHover(TMario *player, bool isMario) {
+BETTER_SMS_FOR_CALLBACK void checkSpamHover(TMario *player, bool isMario) {
     TWaterGun *fludd = player->mFludd;
     if (!fludd)
         return;

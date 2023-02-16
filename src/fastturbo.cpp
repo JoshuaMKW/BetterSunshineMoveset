@@ -108,7 +108,7 @@ SMS_PATCH_BL(SMS_PORT_REGION(0x80254990, 0, 0, 0), lerpTurboNozzleJumpSpeed);
 
 #define SCALE_PARAM(param, scale) param.set(param.get() * scale)
 
-void initFastTurbo(TMario *player, bool isMario) {
+BETTER_SMS_FOR_CALLBACK void initFastTurbo(TMario *player, bool isMario) {
     if (!isMario)
         return;
 
@@ -133,7 +133,7 @@ void initFastTurbo(TMario *player, bool isMario) {
     player->mDeParams.mDashStartTime.set(0.0f);
 }
 
-void updateTurboContext(TMario *player, bool isMario) {
+BETTER_SMS_FOR_CALLBACK void updateTurboContext(TMario *player, bool isMario) {
     if (!isMario)
         return;
 

@@ -25,7 +25,7 @@ extern bool processCrouch(TMario *);
 
 using namespace BetterSMS;
 
-static BetterSMS::ModuleInfo sModuleInfo{"Better Sunshine Moveset", 1, 0, &gSettingsGroup};
+static BetterSMS::ModuleInfo sModuleInfo("Better Sunshine Moveset", 1, 0, &gSettingsGroup);
 
 static void initModule() {
     // Register settings
@@ -55,7 +55,6 @@ static void initModule() {
     // Register module
     BetterSMS::registerModule(&sModuleInfo);
 
-    // Register callbacks
     Player::registerInitCallback("__init_fast_turbo", initFastTurbo);
     Player::registerUpdateCallback("__update_turbo_usage", updateTurboContext);
     Player::registerUpdateCallback("__update_hover_burst", checkSpamHover);
@@ -65,11 +64,14 @@ static void initModule() {
 }
 
 static void deinitModule() {
-    OSReport("Deinitializing Module...\n");
-
-    // Cleanup callbacks
+    Player::deregisterInitCallback("__init_fast_turbo");
+    Player::deregisterUpdateCallback("__update_turbo_usage");
+    Player::deregisterUpdateCallback("__update_hover_burst");
+    Player::deregisterUpdateCallback("__update_rocket_dive");
     Player::deregisterUpdateCallback("__update_mario_crouch");
     Player::deregisterStateMachine(CrouchState);
+
+    BetterSMS::deregisterModule("Better Sunshine Moveset");
 }
 
 // Definition block

@@ -17,7 +17,7 @@ using namespace BetterSMS;
 
 u32 CrouchState = 0xF00001C0;
 
-void checkForCrouch(TMario *player, bool isMario) {
+BETTER_SMS_FOR_CALLBACK void checkForCrouch(TMario *player, bool isMario) {
     if (gpMarDirector->mCurState != TMarDirector::Status::STATE_NORMAL)
         return;
 
@@ -50,7 +50,7 @@ void checkForCrouch(TMario *player, bool isMario) {
     player->mSpeed.scale(0.2f);
 }
 
-bool processCrouch(TMario *player) {
+BETTER_SMS_FOR_CALLBACK bool processCrouch(TMario *player) {
     if (player->mTranslation.y - player->mFloorBelow > 10.0f) {
         player->changePlayerStatus(TMario::STATE_FALL, 0, false);
         return true;

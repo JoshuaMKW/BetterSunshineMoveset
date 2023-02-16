@@ -11,7 +11,7 @@
 
 #include "common.hxx"
 
-void checkRocketNozzleDiveBlast(TMario *player, bool isMario) {
+BETTER_SMS_FOR_CALLBACK void checkRocketNozzleDiveBlast(TMario *player, bool isMario) {
     TWaterGun *fludd = player->mFludd;
     if (!fludd || !gRocketDiveSetting.getBool())
         return;
