@@ -55,20 +55,20 @@ static void initModule() {
     // Register module
     BetterSMS::registerModule(&sModuleInfo);
 
-    Player::registerInitCallback("__init_fast_turbo", initFastTurbo);
-    Player::registerUpdateCallback("__update_turbo_usage", updateTurboContext);
-    Player::registerUpdateCallback("__update_hover_burst", checkSpamHover);
-    Player::registerUpdateCallback("__update_rocket_dive", checkRocketNozzleDiveBlast);
-    Player::registerUpdateCallback("__update_mario_crouch", checkForCrouch);
+    Player::registerInitCallback("_moveset_init_fast_turbo", initFastTurbo);
+    Player::registerUpdateCallback("_moveset_update_turbo_usage", updateTurboContext);
+    Player::registerUpdateCallback("_moveset_update_hover_burst", checkSpamHover);
+    Player::registerUpdateCallback("_moveset_update_rocket_dive", checkRocketNozzleDiveBlast);
+    OSReport("Registered successfully? %s\n", Player::registerUpdateCallback("_moveset_update_crouch", checkForCrouch) ? "YES" : "NO");
     Player::registerStateMachine(CrouchState, processCrouch);
 }
 
 static void deinitModule() {
-    Player::deregisterInitCallback("__init_fast_turbo");
-    Player::deregisterUpdateCallback("__update_turbo_usage");
-    Player::deregisterUpdateCallback("__update_hover_burst");
-    Player::deregisterUpdateCallback("__update_rocket_dive");
-    Player::deregisterUpdateCallback("__update_mario_crouch");
+    Player::deregisterInitCallback("_moveset_init_fast_turbo");
+    Player::deregisterUpdateCallback("_moveset_update_turbo_usage");
+    Player::deregisterUpdateCallback("_moveset_update_hover_burst");
+    Player::deregisterUpdateCallback("_moveset_update_rocket_dive");
+    Player::deregisterUpdateCallback("_moveset_update_crouch");
     Player::deregisterStateMachine(CrouchState);
 
     BetterSMS::deregisterModule(&sModuleInfo);
