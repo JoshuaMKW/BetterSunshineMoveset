@@ -11,6 +11,9 @@
 
 #include "common.hxx"
 
+extern void onPlayerInit(TMario *, bool);
+//extern void onPlayerUpdate(TMario *, bool);
+
 extern void initFastTurbo(TMario *, bool);
 extern void updateTurboContext(TMario *, bool);
 
@@ -21,11 +24,19 @@ extern u32 CrouchState;
 extern void checkForCrouch(TMario *, bool);
 extern bool processCrouch(TMario *);
 
+extern u32 MultiJumpState;
+extern void checkForMultiJump(TMario *, bool);
+extern bool processMultiJump(TMario *);
+
+extern void updateFallDamageContext(TMario *, bool);
+
 // Module definition
 
 using namespace BetterSMS;
 
-static BetterSMS::ModuleInfo sModuleInfo("Better Sunshine Moveset", 1, 0, &gSettingsGroup);
+Settings::SettingsGroup gSettingsGroup(1, 0, Settings::Priority::MODE);
+
+static BetterSMS::ModuleInfo sModuleInfo("Better Sunshine Moveset", 1, 1, &gSettingsGroup);
 
 static void initModule() {
     // Register settings
@@ -37,6 +48,7 @@ static void initModule() {
     gSettingsGroup.addSetting(&gRocketDiveSetting);
     gSettingsGroup.addSetting(&gFastTurboSetting);
     gSettingsGroup.addSetting(&gFastDiveSetting);
+    gSettingsGroup.addSetting(&gFallDamageSetting);
     {
         auto &saveInfo        = gSettingsGroup.getSaveInfo();
         saveInfo.mSaveName    = Settings::getGroupName(gSettingsGroup);
@@ -55,16 +67,22 @@ static void initModule() {
     // Register module
     BetterSMS::registerModule(&sModuleInfo);
 
+    Player::registerInitCallback("_moveset_init", onPlayerInit);
+    //Player::registerUpdateCallback("_moveset_update", onPlayerUpdate);
     Player::registerInitCallback("_moveset_init_fast_turbo", initFastTurbo);
     Player::registerUpdateCallback("_moveset_update_turbo_usage", updateTurboContext);
     Player::registerUpdateCallback("_moveset_update_hover_burst", checkSpamHover);
     Player::registerUpdateCallback("_moveset_update_rocket_dive", checkRocketNozzleDiveBlast);
+    Player::registerUpdateCallback("_moveset_update_multijump", checkForMultiJump);
     Player::registerUpdateCallback("_moveset_update_crouch", checkForCrouch);
+    Player::registerUpdateCallback("_moveset_update_fall_damage", updateFallDamageContext);
+    Player::registerStateMachine(MultiJumpState, processMultiJump);
     Player::registerStateMachine(CrouchState, processCrouch);
 }
 
 static void deinitModule() {
     Player::deregisterInitCallback("_moveset_init_fast_turbo");
+    Player::deregisterInitCallback("_moveset_update_fast_turbo");
     Player::deregisterUpdateCallback("_moveset_update_turbo_usage");
     Player::deregisterUpdateCallback("_moveset_update_hover_burst");
     Player::deregisterUpdateCallback("_moveset_update_rocket_dive");
@@ -75,7 +93,7 @@ static void deinitModule() {
 }
 
 // Definition block
-KURIBO_MODULE_BEGIN("OurModule", "JoshuaMK", "v1.0") {
+KURIBO_MODULE_BEGIN("Better Sunshine Moveset", "JoshuaMK", "v1.0") {
     // Set the load and unload callbacks to our registration functions
     KURIBO_EXECUTE_ON_LOAD { initModule(); }
     KURIBO_EXECUTE_ON_UNLOAD { deinitModule(); }

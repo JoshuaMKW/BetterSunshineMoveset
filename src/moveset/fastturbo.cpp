@@ -58,7 +58,7 @@ static TMario *turboNozzleConeCondition2(TMario *player) { /* TMarioEffect * */
         return nullptr;
 
     MActor *coneActor = reinterpret_cast<MActor *>(marioEffect[0x80 / 4]);
-    if (player->mFludd->mCurrentNozzle == TWaterGun::Turbo && player->mController &&
+    if (player->mFludd->mNozzleTurbo.mSprayState == TNozzleTrigger::ACTIVE &&
         gFastTurboSetting.getBool()) {
         coneActor->mModel->mBaseScale.set(player->mController->mButtons.mAnalogR,
                                           player->mController->mButtons.mAnalogR,
@@ -108,24 +108,26 @@ SMS_PATCH_BL(SMS_PORT_REGION(0x80254990, 0, 0, 0), lerpTurboNozzleJumpSpeed);
 
 #define SCALE_PARAM(param, scale) param.set(param.get() * scale)
 
+struct TurboNozzleData {
+	f32 mRunningMax;
+	f32 mDashMax;
+	f32 mJumpingMax;
+	f32 mBroadJumpForce;
+};
+
 BETTER_SMS_FOR_CALLBACK void initFastTurbo(TMario *player, bool isMario) {
     if (!isMario)
         return;
 
+    TurboNozzleData *data = new TurboNozzleData;
+    data->mRunningMax     = player->mDeParams.mRunningMax.get();
+    data->mDashMax        = player->mDeParams.mDashMax.get();
+    data->mJumpingMax     = player->mJumpParams.mJumpingMax.get();
+    data->mBroadJumpForce = player->mJumpParams.mBroadJumpForce.get();
+    Player::registerData(player, "movement__turbo_nozzle_data", data);
+
     if (!player->mFludd || !gFastTurboSetting.getBool())
         return;
-
-    {
-        Player::TPlayerData *playerData = Player::getData(player);
-        SCALE_PARAM(playerData->mDefaultAttrs.mDeParams.mRunningMax, 2.25f);
-        SCALE_PARAM(playerData->mDefaultAttrs.mDeParams.mDashMax, 2.25f);
-        SCALE_PARAM(playerData->mDefaultAttrs.mJumpParams.mJumpingMax, 2.25f);
-        SCALE_PARAM(playerData->mDefaultAttrs.mJumpParams.mBroadJumpForce, 2.25f);
-        SCALE_PARAM(player->mDeParams.mRunningMax, 2.25f);
-        SCALE_PARAM(player->mDeParams.mDashMax, 2.25f);
-        SCALE_PARAM(player->mJumpParams.mJumpingMax, 2.25f);
-        SCALE_PARAM(player->mJumpParams.mBroadJumpForce, 2.25f);
-    }
 
     SCALE_PARAM(player->mFludd->mNozzleTurbo.mEmitParams.mAmountMax, 8);
     SCALE_PARAM(player->mFludd->mNozzleTurbo.mEmitParams.mDamageLoss, 8);
@@ -133,26 +135,62 @@ BETTER_SMS_FOR_CALLBACK void initFastTurbo(TMario *player, bool isMario) {
     player->mDeParams.mDashStartTime.set(0.0f);
 }
 
+static void resetTurboParams(Player::TPlayerData *playerData) {
+    TMario *player = playerData->getPlayer();
+
+    auto *data = reinterpret_cast<TurboNozzleData *>(
+        Player::getRegisteredData(player, "movement__turbo_nozzle_data"));
+    
+    playerData->mDefaultAttrs.mDeParams.mRunningMax.set(data->mRunningMax);
+    playerData->mDefaultAttrs.mDeParams.mDashMax.set(data->mDashMax);
+    playerData->mDefaultAttrs.mJumpParams.mJumpingMax.set(data->mJumpingMax);
+    playerData->mDefaultAttrs.mJumpParams.mBroadJumpForce.set(data->mBroadJumpForce);
+    player->mDeParams.mRunningMax.set(data->mRunningMax);
+    player->mDeParams.mDashMax.set(data->mDashMax);
+    player->mJumpParams.mJumpingMax.set(data->mJumpingMax);
+    player->mJumpParams.mBroadJumpForce.set(data->mBroadJumpForce);
+}
+
+static void scaleTurboParams(Player::TPlayerData *playerData) {
+    TMario *player                  = playerData->getPlayer();
+    SCALE_PARAM(playerData->mDefaultAttrs.mDeParams.mRunningMax, 2.25f);
+    SCALE_PARAM(playerData->mDefaultAttrs.mDeParams.mDashMax, 2.25f);
+    SCALE_PARAM(playerData->mDefaultAttrs.mJumpParams.mJumpingMax, 2.25f);
+    SCALE_PARAM(playerData->mDefaultAttrs.mJumpParams.mBroadJumpForce, 2.25f);
+    SCALE_PARAM(player->mDeParams.mRunningMax, 2.25f);
+    SCALE_PARAM(player->mDeParams.mDashMax, 2.25f);
+    SCALE_PARAM(player->mJumpParams.mJumpingMax, 2.25f);
+    SCALE_PARAM(player->mJumpParams.mBroadJumpForce, 2.25f);
+}
+
+static void updateFastTurbo(TMario* player) {
+    Player::TPlayerData *playerData = Player::getData(player);
+    resetTurboParams(playerData);
+    scaleTurboParams(playerData);
+}
+
 BETTER_SMS_FOR_CALLBACK void updateTurboContext(TMario *player, bool isMario) {
     if (!isMario)
         return;
 
+    Player::TPlayerData *playerData = Player::getData(player);
+    resetTurboParams(playerData);
+
     auto *fludd = player->mFludd;
-    if (!fludd || !player->mController)
+
+    if (!gFastTurboSetting.getBool() || !fludd || fludd->mCurrentNozzle != TWaterGun::Turbo ||
+        fludd->mCurrentWater <= 0)
         return;
 
-    if (fludd->mCurrentNozzle != TWaterGun::Turbo || !gFastTurboSetting.getBool())
-        return;
-
-    if (fludd->mCurrentWater <= 0)
-        return;
+    if (fludd->mNozzleTurbo.mSprayState == TNozzleTrigger::ACTIVE)
+        scaleTurboParams(playerData);
 
     const auto analogR = player->mController->mButtons.mAnalogR;
 
     fludd->mNozzleTurbo.mEmitParams.mNum.set(lerp<f32>(1.0f, 10.0f, analogR));
     fludd->mNozzleTurbo.mEmitParams.mDirTremble.set(lerp<f32>(0.01f, 0.08f, analogR));
 
-    if (analogR < 0.1f || fludd->mNozzleTurbo.mSprayState == 2) {
+    if (analogR < 0.1f || fludd->mNozzleTurbo.mSprayState == TNozzleTrigger::DEAD) {
         fludd->mNozzleTurbo.mTriggerFill = 0.0f;
         return;
     }

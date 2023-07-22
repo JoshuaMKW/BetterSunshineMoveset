@@ -16,14 +16,14 @@ class LongJumpMappingSetting final : public Settings::IntSetting {
 public:
     enum Mapping { BUTTON_Z, BUTTON_L };
 
-    LongJumpMappingSetting() : IntSetting("Long Jump/Crouch Button", &sLongJumpValue) {
+    LongJumpMappingSetting() : IntSetting("Long Jump/Crouch Button", &mLongJumpValue), mLongJumpValue(LongJumpMappingSetting::BUTTON_Z) {
         mValueRange     = {0, 1, 1};
         mValueChangedCB = valueChanged;
     }
     ~LongJumpMappingSetting() override {}
 
     void getValueStr(char *dst) const override {
-        switch (sLongJumpValue) {
+        switch (mLongJumpValue) {
         case Mapping::BUTTON_Z:
             strncpy(dst, "Z", 2);
             break;
@@ -49,6 +49,10 @@ public:
             PowerPC::writeU32(reinterpret_cast<u32 *>(SMS_PORT_REGION(0x8024C248, 0, 0, 0)), 0x540004A5);
             PowerPC::writeU32(reinterpret_cast<u32 *>(SMS_PORT_REGION(0x8024C36C, 0, 0, 0)), 0x540004A5);
             PowerPC::writeU32(reinterpret_cast<u32 *>(SMS_PORT_REGION(0x80252124, 0, 0, 0)), 0x540004A5);
+            PowerPC::writeU32(reinterpret_cast<u32 *>(SMS_PORT_REGION(0x802A857C, 0, 0, 0)), 0x57E004E7);
+            PowerPC::writeU32(reinterpret_cast<u32 *>(SMS_PORT_REGION(0x802A8588, 0, 0, 0)), 0x60001000);
+            PowerPC::writeU32(reinterpret_cast<u32 *>(SMS_PORT_REGION(0x802A85A8, 0, 0, 0)), 0x57E004A5);
+            PowerPC::writeU32(reinterpret_cast<u32 *>(SMS_PORT_REGION(0x802A85B4, 0, 0, 0)), 0x60002000);
             PowerPC::writeU32(reinterpret_cast<u32 *>(SMS_PORT_REGION(0x802A8834, 0, 0, 0)), 0x540006F7);
             PowerPC::writeU32(reinterpret_cast<u32 *>(SMS_PORT_REGION(0x802A8840, 0, 0, 0)), 0x540006F7);
             PowerPC::writeU32(reinterpret_cast<u32 *>(SMS_PORT_REGION(0x802A884C, 0, 0, 0)), 0x41820010);  // Allow L button meaning updates
@@ -64,6 +68,10 @@ public:
             PowerPC::writeU32(reinterpret_cast<u32 *>(SMS_PORT_REGION(0x8024C248, 0, 0, 0)), 0x540004E7);
             PowerPC::writeU32(reinterpret_cast<u32 *>(SMS_PORT_REGION(0x8024C36C, 0, 0, 0)), 0x54000427);
             PowerPC::writeU32(reinterpret_cast<u32 *>(SMS_PORT_REGION(0x80252124, 0, 0, 0)), 0x540004E7);
+            PowerPC::writeU32(reinterpret_cast<u32 *>(SMS_PORT_REGION(0x802A857C, 0, 0, 0)), 0x57E004A5);
+            PowerPC::writeU32(reinterpret_cast<u32 *>(SMS_PORT_REGION(0x802A8588, 0, 0, 0)), 0x60002000);
+            PowerPC::writeU32(reinterpret_cast<u32 *>(SMS_PORT_REGION(0x802A85A8, 0, 0, 0)), 0x57E004E7);
+            PowerPC::writeU32(reinterpret_cast<u32 *>(SMS_PORT_REGION(0x802A85B4, 0, 0, 0)), 0x60001000);
             PowerPC::writeU32(reinterpret_cast<u32 *>(SMS_PORT_REGION(0x802A8834, 0, 0, 0)), 0x54000673);
             PowerPC::writeU32(reinterpret_cast<u32 *>(SMS_PORT_REGION(0x802A8840, 0, 0, 0)), 0x54000673);
             PowerPC::writeU32(reinterpret_cast<u32 *>(SMS_PORT_REGION(0x802A884C, 0, 0, 0)), 0x60000000);  // Allow L button meaning updates
@@ -76,12 +84,38 @@ public:
     // clang-format on
 
 private:
-    static int sLongJumpValue;
+    int mLongJumpValue;
+};
+
+class LongJumpSetting final : public Settings::IntSetting {
+public:
+    enum Mode { MODE_OFF, MODE_NO_FLUDD, MODE_ON };
+
+    LongJumpSetting() : IntSetting("Long Jump", &mLongJumpValue), mLongJumpValue(MODE_ON) {
+        mValueRange = {0, 2, 1};
+	}
+
+    void getValueStr(char *dst) const override {
+        switch (mLongJumpValue) {
+        case MODE_OFF:
+			snprintf(dst, 4, "OFF");
+			break;
+        case MODE_NO_FLUDD:
+			snprintf(dst, 9, "NO FLUDD");
+			break;
+        case MODE_ON:
+			snprintf(dst, 3, "ON");
+			break;
+		}
+	}
+
+private:
+    int mLongJumpValue;
 };
 
 class HoverSlideSetting final : public Settings::SwitchSetting {
 public:
-    HoverSlideSetting() : SwitchSetting("Hover Slide", &sHoverSlideActive) {
+    HoverSlideSetting() : SwitchSetting("Hover Slide", &mHoverSlideActive), mHoverSlideActive(true) {
         mValueChangedCB = valueChanged;
     }
     ~HoverSlideSetting() override {}
@@ -103,53 +137,81 @@ public:
     // clang-format on
 
 private:
-    static bool sHoverSlideActive;
+    bool mHoverSlideActive;
 };
 
-class FastDiveSetting final : public Settings::SwitchSetting {
+SMS_WRITE_32(SMS_PORT_REGION(0x8038DC70, 0, 0, 0), 0x43160000);
+
+class FastTurboSetting final : public Settings::SwitchSetting {
 public:
-    FastDiveSetting() : SwitchSetting("Fast Dive/Rollout", &sFastDiveActive) {
+    FastTurboSetting()
+        : SwitchSetting("Fast Turbo", &mFastTurboActive), mFastTurboActive(true) {
         mValueChangedCB = valueChanged;
     }
-    ~FastDiveSetting() override {}
+    ~FastTurboSetting() override {}
 
     void load(JSUMemoryInputStream &in) override {
         SwitchSetting::load(in);
-        mValueChangedCB(mValuePtr, mValuePtr, getKind());  // We manually update here to set instructions on load
+        mValueChangedCB(mValuePtr, mValuePtr,
+                        getKind());  // We manually update here to set instructions on load
     }
 
     // clang-format off
     static void valueChanged(void* old, void* cur, ValueKind kind) {
         if (*reinterpret_cast<bool *>(cur) == false) {
-            PowerPC::writeU32(reinterpret_cast<u32 *>(SMS_PORT_REGION(0x802496AC, 0, 0, 0)), 0x4800C089);
-            PowerPC::writeU32(reinterpret_cast<u32 *>(SMS_PORT_REGION(0x8024976C, 0, 0, 0)), 0x4800BFC9);
-            PowerPC::writeU32(reinterpret_cast<u32 *>(SMS_PORT_REGION(0x8024999C, 0, 0, 0)), 0x4800BD99);
-            PowerPC::writeU32(reinterpret_cast<u32 *>(SMS_PORT_REGION(0x80249C70, 0, 0, 0)), 0x4800BAC5);
-            PowerPC::writeU32(reinterpret_cast<u32 *>(SMS_PORT_REGION(0x8024C3A8, 0, 0, 0)), 0x7FE3FB78);
-            PowerPC::writeU32(reinterpret_cast<u32 *>(SMS_PORT_REGION(0x8024C284, 0, 0, 0)), 0x480094B1);
+            PowerPC::writeU32(reinterpret_cast<u32 *>(SMS_PORT_REGION(0x8038DC70, 0, 0, 0)), 0x42C80000);
         } else {
-            // Remove arbitrary dive speed
-            PowerPC::writeU32(reinterpret_cast<u32 *>(SMS_PORT_REGION(0x802496AC, 0, 0, 0)), 0x60000000);
-            PowerPC::writeU32(reinterpret_cast<u32 *>(SMS_PORT_REGION(0x8024976C, 0, 0, 0)), 0x60000000);
-            PowerPC::writeU32(reinterpret_cast<u32 *>(SMS_PORT_REGION(0x8024999C, 0, 0, 0)), 0x60000000);
-            PowerPC::writeU32(reinterpret_cast<u32 *>(SMS_PORT_REGION(0x80249C70, 0, 0, 0)), 0x60000000);
-            PowerPC::writeU32(reinterpret_cast<u32 *>(SMS_PORT_REGION(0x8024C3A8, 0, 0, 0)), 0x60000000);
-            PowerPC::writeU32(reinterpret_cast<u32 *>(SMS_PORT_REGION(0x8024C284, 0, 0, 0)), 0x60000000);
+            PowerPC::writeU32(reinterpret_cast<u32 *>(SMS_PORT_REGION(0x8038DC70, 0, 0, 0)), 0x43160000);
         }
     }
     // clang-format on
 
 private:
-    static bool sFastDiveActive;
+    bool mFastTurboActive;
+};
+
+class FastDiveSetting final : public Settings::SwitchSetting {
+public:
+    FastDiveSetting() : SwitchSetting("Fast Dive/Rollout", &mFastDiveActive), mFastDiveActive(true) {
+    }
+    ~FastDiveSetting() override {}
+
+private:
+    bool mFastDiveActive;
+};
+
+class FallDamageSetting final : public Settings::IntSetting {
+public:
+    enum Mode { MODE_NORMAL, MODE_DYNAMIC };
+
+    FallDamageSetting()
+        : IntSetting("Fall Damage", &mFallDamageValue), mFallDamageValue(MODE_DYNAMIC) {
+        mValueRange = {0, 1, 1};
+    }
+
+    void getValueStr(char* dst) const override {
+        switch (mFallDamageValue) {
+		case MODE_NORMAL:
+			snprintf(dst, 7, "NORMAL");
+			break;
+		case MODE_DYNAMIC:
+			snprintf(dst, 8, "DYNAMIC");
+			break;
+		}
+	}
+
+private:
+	int mFallDamageValue;
 };
 
 extern Settings::SettingsGroup gSettingsGroup;
 
 extern LongJumpMappingSetting gLongJumpMappingSetting;
-extern Settings::SwitchSetting gLongJumpSetting;
+extern LongJumpSetting gLongJumpSetting;
 extern Settings::SwitchSetting gBackFlipSetting;
 extern Settings::SwitchSetting gHoverBurstSetting;
 extern HoverSlideSetting gHoverSlideSetting;
 extern Settings::SwitchSetting gRocketDiveSetting;
-extern Settings::SwitchSetting gFastTurboSetting;
+extern FastTurboSetting gFastTurboSetting;
 extern FastDiveSetting gFastDiveSetting;
+extern FallDamageSetting gFallDamageSetting;

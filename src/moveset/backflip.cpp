@@ -21,7 +21,7 @@ BETTER_SMS_FOR_CALLBACK void checkForCrouch(TMario *player, bool isMario) {
     if (gpMarDirector->mCurState != TMarDirector::Status::STATE_NORMAL)
         return;
 
-    if (player->onYoshi() || !gBackFlipSetting.getBool())
+    if (!isMario || player->onYoshi() || !gBackFlipSetting.getBool())
         return;
 
     if (player->mState != TMario::STATE_IDLE && player->mState != TMario::STATE_STOP &&

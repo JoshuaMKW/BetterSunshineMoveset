@@ -1,31 +1,25 @@
 #include <Dolphin/types.h>
 #include "settings.hxx"
 
-Settings::SettingsGroup gSettingsGroup(1, 0, Settings::Priority::MODE);
-
-int LongJumpMappingSetting::sLongJumpValue = LongJumpMappingSetting::BUTTON_Z;
 LongJumpMappingSetting gLongJumpMappingSetting;
+LongJumpSetting gLongJumpSetting;
 
-static bool sLongJumpActive = false;
-Settings::SwitchSetting gLongJumpSetting("Long Jump", &sLongJumpActive);
-
-static bool sBackFlipActive = false;
+static bool sBackFlipActive = true;
 Settings::SwitchSetting gBackFlipSetting("Back Flip", &sBackFlipActive);
 
-static bool sHoverBurstActive = false;
+static bool sHoverBurstActive = true;
 Settings::SwitchSetting gHoverBurstSetting("Hover Burst", &sHoverBurstActive);
 
-bool HoverSlideSetting::sHoverSlideActive = false;
 HoverSlideSetting gHoverSlideSetting;
 
-static bool sRocketDiveActive = false;
+static bool sRocketDiveActive = true;
 Settings::SwitchSetting gRocketDiveSetting("Rocket Dive", &sRocketDiveActive);
 
-static bool sFastTurboActive = false;
-Settings::SwitchSetting gFastTurboSetting("Fast Turbo", &sFastTurboActive);
+FastTurboSetting gFastTurboSetting;
 
-bool FastDiveSetting::sFastDiveActive = false;
 FastDiveSetting gFastDiveSetting;
+
+FallDamageSetting gFallDamageSetting;
 
 u32 getCrouchAndLongJumpButtonMeaning() {
     switch (gLongJumpMappingSetting.getInt()) {
