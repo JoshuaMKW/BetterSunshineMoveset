@@ -1,11 +1,11 @@
 #pragma once
 
-#include <Dolphin/types.h>
 #include <Dolphin/CARD.h>
+#include <Dolphin/types.h>
 
-#include <BetterSMS/settings.hxx>
 #include <BetterSMS/memory.hxx>
 #include <BetterSMS/module.hxx>
+#include <BetterSMS/settings.hxx>
 
 using namespace BetterSMS;
 
@@ -16,7 +16,9 @@ class LongJumpMappingSetting final : public Settings::IntSetting {
 public:
     enum Mapping { BUTTON_Z, BUTTON_L };
 
-    LongJumpMappingSetting() : IntSetting("Long Jump/Crouch Button", &mLongJumpValue), mLongJumpValue(LongJumpMappingSetting::BUTTON_Z) {
+    LongJumpMappingSetting()
+        : IntSetting("Long Jump/Crouch Button", &mLongJumpValue),
+          mLongJumpValue(LongJumpMappingSetting::BUTTON_Z) {
         mValueRange     = {0, 1, 1};
         mValueChangedCB = valueChanged;
     }
@@ -93,21 +95,23 @@ public:
 
     LongJumpSetting() : IntSetting("Long Jump", &mLongJumpValue), mLongJumpValue(MODE_ON) {
         mValueRange = {0, 2, 1};
-	}
+    }
 
     void getValueStr(char *dst) const override {
         switch (mLongJumpValue) {
         case MODE_OFF:
-			snprintf(dst, 4, "OFF");
-			break;
+            snprintf(dst, 4, "OFF");
+            break;
         case MODE_NO_FLUDD:
-			snprintf(dst, 9, "NO FLUDD");
-			break;
+            snprintf(dst, 9, "NO FLUDD");
+            break;
         case MODE_ON:
-			snprintf(dst, 3, "ON");
-			break;
-		}
-	}
+            snprintf(dst, 3, "ON");
+            break;
+        default:
+            snprintf(dst, 10, "%d", mLongJumpValue);
+        }
+    }
 
 private:
     int mLongJumpValue;
@@ -115,7 +119,8 @@ private:
 
 class HoverSlideSetting final : public Settings::SwitchSetting {
 public:
-    HoverSlideSetting() : SwitchSetting("Hover Slide", &mHoverSlideActive), mHoverSlideActive(true) {
+    HoverSlideSetting()
+        : SwitchSetting("Hover Slide", &mHoverSlideActive), mHoverSlideActive(true) {
         mValueChangedCB = valueChanged;
     }
     ~HoverSlideSetting() override {}
@@ -144,8 +149,7 @@ SMS_WRITE_32(SMS_PORT_REGION(0x8038DC70, 0, 0, 0), 0x43160000);
 
 class FastTurboSetting final : public Settings::SwitchSetting {
 public:
-    FastTurboSetting()
-        : SwitchSetting("Fast Turbo", &mFastTurboActive), mFastTurboActive(true) {
+    FastTurboSetting() : SwitchSetting("Fast Turbo", &mFastTurboActive), mFastTurboActive(true) {
         mValueChangedCB = valueChanged;
     }
     ~FastTurboSetting() override {}
@@ -172,8 +176,8 @@ private:
 
 class FastDiveSetting final : public Settings::SwitchSetting {
 public:
-    FastDiveSetting() : SwitchSetting("Fast Dive/Rollout", &mFastDiveActive), mFastDiveActive(true) {
-    }
+    FastDiveSetting()
+        : SwitchSetting("Fast Dive/Rollout", &mFastDiveActive), mFastDiveActive(true) {}
     ~FastDiveSetting() override {}
 
 private:
@@ -189,19 +193,19 @@ public:
         mValueRange = {0, 1, 1};
     }
 
-    void getValueStr(char* dst) const override {
+    void getValueStr(char *dst) const override {
         switch (mFallDamageValue) {
-		case MODE_NORMAL:
-			snprintf(dst, 7, "NORMAL");
-			break;
-		case MODE_DYNAMIC:
-			snprintf(dst, 8, "DYNAMIC");
-			break;
-		}
-	}
+        case MODE_NORMAL:
+            snprintf(dst, 7, "NORMAL");
+            break;
+        case MODE_DYNAMIC:
+            snprintf(dst, 8, "DYNAMIC");
+            break;
+        }
+    }
 
 private:
-	int mFallDamageValue;
+    int mFallDamageValue;
 };
 
 extern Settings::SettingsGroup gSettingsGroup;

@@ -1,8 +1,8 @@
 #include <Dolphin/types.h>
 #include "settings.hxx"
 
-LongJumpMappingSetting gLongJumpMappingSetting;
-LongJumpSetting gLongJumpSetting;
+LongJumpMappingSetting gLongJumpMappingSetting{};
+LongJumpSetting gLongJumpSetting{};
 
 static bool sBackFlipActive = true;
 Settings::SwitchSetting gBackFlipSetting("Back Flip", &sBackFlipActive);
@@ -10,16 +10,16 @@ Settings::SwitchSetting gBackFlipSetting("Back Flip", &sBackFlipActive);
 static bool sHoverBurstActive = true;
 Settings::SwitchSetting gHoverBurstSetting("Hover Burst", &sHoverBurstActive);
 
-HoverSlideSetting gHoverSlideSetting;
+HoverSlideSetting gHoverSlideSetting{};
 
 static bool sRocketDiveActive = true;
 Settings::SwitchSetting gRocketDiveSetting("Rocket Dive", &sRocketDiveActive);
 
-FastTurboSetting gFastTurboSetting;
+FastTurboSetting gFastTurboSetting{};
 
-FastDiveSetting gFastDiveSetting;
+FastDiveSetting gFastDiveSetting{};
 
-FallDamageSetting gFallDamageSetting;
+FallDamageSetting gFallDamageSetting{};
 
 u32 getCrouchAndLongJumpButtonMeaning() {
     switch (gLongJumpMappingSetting.getInt()) {
