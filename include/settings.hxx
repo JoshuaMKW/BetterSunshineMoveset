@@ -24,7 +24,7 @@ public:
     }
     ~LongJumpMappingSetting() override {}
 
-    void getValueStr(char *dst) const override {
+    void getValueName(char *dst) const override {
         switch (mLongJumpValue) {
         case Mapping::BUTTON_Z:
             strncpy(dst, "Z", 2);
@@ -97,7 +97,7 @@ public:
         mValueRange = {0, 2, 1};
     }
 
-    void getValueStr(char *dst) const override {
+    void getValueName(char *dst) const override {
         switch (mLongJumpValue) {
         case MODE_OFF:
             snprintf(dst, 4, "OFF");
@@ -191,7 +191,7 @@ public:
         mValueRange = {0, 1, 1};
     }
 
-    void getValueStr(char *dst) const override {
+    void getValueName(char *dst) const override {
         switch (mFallDamageValue) {
         case MODE_NORMAL:
             snprintf(dst, 7, "NORMAL");
