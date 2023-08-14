@@ -108,8 +108,6 @@ public:
         case MODE_ON:
             snprintf(dst, 3, "ON");
             break;
-        default:
-            snprintf(dst, 10, "%d", mLongJumpValue);
         }
     }
 
