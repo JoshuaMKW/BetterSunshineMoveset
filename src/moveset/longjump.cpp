@@ -28,9 +28,7 @@ f32 calcJumpPower(TMario *player, f32 factor, f32 base, f32 jumpPower) {
     auto *stageConfig = Stage::getStageConfiguration();
 
     jumpPower *= params->mBaseJumpMultiplier.get();
-    jumpPower *=
-        scaleLinearAtAnchor<f32>(player->mScale.y,
-                                 0.5f, 1.0f);
+    jumpPower *= scaleLinearAtAnchor<f32>(player->mScale.y, 0.5f, 1.0f);
     if (player->mState & TMario::STATE_AIRBORN) {
         f32 multiplier = params->mMultiJumpMultiplier.get();
         for (u32 i = 1; i < moveData->mCurJump; ++i) {
@@ -44,7 +42,7 @@ f32 calcJumpPower(TMario *player, f32 factor, f32 base, f32 jumpPower) {
 }
 
 static void setJumpOrLongJump(TMario *player, u32 state, u32 unk_0) {
-    constexpr f32 LongJumpMinSpeed  = 10.0f;
+    constexpr f32 LongJumpMinSpeed = 10.0f;
 
     auto *playerData = Player::getData(player);
 
@@ -89,13 +87,12 @@ static void setJumpOrLongJump(TMario *player, u32 state, u32 unk_0) {
         else
             moveData->mIsLongJumping = playerData->isMario() && (player->mActionState & 0x8) == 0;
 
-
         /*if (gLongJumpSetting.getInt() == LongJumpSetting::MODE_NO_FLUDD)
             moveData->mIsLongJumping =
                 (player->mActionState & 0x8) == 0 && !player->mAttributes.mHasFludd;
         else
             moveData->mIsLongJumping = (player->mActionState & 0x8) == 0;*/
-        state                      = TMario::STATE_JUMP;
+        state = TMario::STATE_JUMP;
     }
 
     player->setStatusToJumping(state, unk_0);

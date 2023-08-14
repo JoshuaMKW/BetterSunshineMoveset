@@ -1,5 +1,5 @@
-#include <Dolphin/types.h>
 #include "settings.hxx"
+#include <Dolphin/types.h>
 
 LongJumpMappingSetting gLongJumpMappingSetting{};
 LongJumpSetting gLongJumpSetting{};

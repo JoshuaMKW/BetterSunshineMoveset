@@ -30,7 +30,7 @@ BETTER_SMS_FOR_CALLBACK void updateFallDamageContext(TMario *player, bool isMari
 
     if (!(player->mPrevState & TMario::STATE_AIRBORN)) {
         movementData->mLastDropY = player->mLastGroundedPos.y;
-		return;
+        return;
     }
 }
 
@@ -55,7 +55,7 @@ static f32 getTrueFloorContactSpeed(TMario *player) {
 static void dynamicFallDamage(TMario *player, int dmg, int type, int emitcount, int tremble) {
     if (gFallDamageSetting.getInt() == FallDamageSetting::MODE_NORMAL) {
         player->floorDamageExec(dmg, type, emitcount, tremble);
-		return;
+        return;
     }
 
     auto playerData = Player::getData(player);

@@ -1,10 +1,10 @@
 #include <SMS/Player/Mario.hxx>
 
 #include <SMS/GC2D/GCConsole2.hxx>
-#include <SMS/Player/Watergun.hxx>
-#include <SMS/raw_fn.hxx>
 #include <SMS/MSound/MSound.hxx>
 #include <SMS/MSound/MSoundSESystem.hxx>
+#include <SMS/Player/Watergun.hxx>
+#include <SMS/raw_fn.hxx>
 
 #include <BetterSMS/module.hxx>
 #include <BetterSMS/player.hxx>

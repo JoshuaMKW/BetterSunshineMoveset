@@ -19,10 +19,13 @@ BETTER_SMS_FOR_CALLBACK void checkForMultiJump(TMario *player, bool isMario) {
 
     auto *params = getPlayerMovementParams(player);
     if (!params)
-		return;
+        return;
 
-    const bool isYoshi   = player->mYoshi ? player->mYoshi->mState == TYoshi::MOUNTED : false;
-    const bool isAirBorn = ((player->mState & TMario::STATE_AIRBORN) && (player->mActionState & 0x4)) || (!(player->mState & TMario::STATE_WATERBORN) && (player->mTranslation.y > player->mFloorBelow + 10));
+    const bool isYoshi = player->mYoshi ? player->mYoshi->mState == TYoshi::MOUNTED : false;
+    const bool isAirBorn =
+        ((player->mState & TMario::STATE_AIRBORN) && (player->mActionState & 0x4)) ||
+        (!(player->mState & TMario::STATE_WATERBORN) &&
+         (player->mTranslation.y > player->mFloorBelow + 10));
     const bool isInvalidState =
         (player->mState & 0x800000) || isYoshi || player->mState == TMario::STATE_SLIP_JUMP ||
         player->mState == TMario::STATE_THROWN || player->mAttributes.mIsGameOver;

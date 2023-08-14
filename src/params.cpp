@@ -71,59 +71,59 @@ BETTER_SMS_FOR_CALLBACK void onPlayerInit(TMario *player, bool isMario) {
     SCALE_PARAM(player->mDirtyParams.mSlipCatchSp, speedMultiplier);
 }
 
-//BETTER_SMS_FOR_CALLBACK void onPlayerUpdate(TMario *player, bool isMario) {
-//    auto *data = getPlayerMovementData(player);
-//    if (!data)
-//        return;
+// BETTER_SMS_FOR_CALLBACK void onPlayerUpdate(TMario *player, bool isMario) {
+//     auto *data = getPlayerMovementData(player);
+//     if (!data)
+//         return;
 //
-//    auto *params = getPlayerMovementParams(player);
-//    if (!params)
-//        return;
+//     auto *params = getPlayerMovementParams(player);
+//     if (!params)
+//         return;
 //
-//    f32 speedMultiplier   = params->mScaleMultiplier.get();
-//    f32 jumpMultiplier    = params->mBaseJumpMultiplier.get();
-//    f32 gravityMultiplier = params->mGravityMultiplier.get();
-//    if (player->onYoshi()) {
-//        speedMultiplier = 1.0f;
-//        jumpMultiplier  = 1.0f;
-//    }
+//     f32 speedMultiplier   = params->mScaleMultiplier.get();
+//     f32 jumpMultiplier    = params->mBaseJumpMultiplier.get();
+//     f32 gravityMultiplier = params->mGravityMultiplier.get();
+//     if (player->onYoshi()) {
+//         speedMultiplier = 1.0f;
+//         jumpMultiplier  = 1.0f;
+//     }
 //
-//    SCALE_PARAM(player->mDeParams.mRunningMax, speedMultiplier);
-//    SCALE_PARAM(player->mDeParams.mDashMax, speedMultiplier);
-//    SCALE_PARAM(player->mDeParams.mClashSpeed,
-//                speedMultiplier *
-//                    ((gFastDiveSetting.getBool() && isMario) || gFastTurboSetting.getBool()
-//                         ? 2.25f
-//                         : 1.0f));
-//    SCALE_PARAM(player->mJumpParams.mGravity, gravityMultiplier);
-//    SCALE_PARAM(player->mJumpParams.mSpinJumpGravity, gravityMultiplier);
-//    SCALE_PARAM(player->mJumpParams.mJumpSpeedAccelControl, speedMultiplier);
-//    SCALE_PARAM(player->mJumpParams.mPopUpSpeedY, jumpMultiplier);
-//    SCALE_PARAM(player->mJumpParams.mJumpingMax, jumpMultiplier);
-//    SCALE_PARAM(player->mJumpParams.mFenceSpeed, speedMultiplier);
-//    SCALE_PARAM(player->mJumpParams.mFireBackVelocity, jumpMultiplier);
-//    SCALE_PARAM(player->mJumpParams.mBroadJumpForceY, jumpMultiplier);
-//    SCALE_PARAM(player->mJumpParams.mRotateJumpForceY, jumpMultiplier);
-//    SCALE_PARAM(player->mJumpParams.mBackJumpForceY, jumpMultiplier);
-//    SCALE_PARAM(player->mJumpParams.mHipAttackSpeedY, gravityMultiplier);
-//    SCALE_PARAM(player->mJumpParams.mSuperHipAttackSpeedY, gravityMultiplier);
-//    SCALE_PARAM(player->mJumpParams.mRotBroadJumpForceY, jumpMultiplier);
-//    SCALE_PARAM(player->mJumpParams.mSecJumpForce, jumpMultiplier);
-//    SCALE_PARAM(player->mJumpParams.mUltraJumpForce, jumpMultiplier);
-//    SCALE_PARAM(player->mJumpParams.mTurnJumpForce, jumpMultiplier);
-//    SCALE_PARAM(player->mRunParams.mMaxSpeed, speedMultiplier);
-//    SCALE_PARAM(player->mRunParams.mAddBase, speedMultiplier);
-//    SCALE_PARAM(player->mRunParams.mDecBrake, speedMultiplier);
-//    SCALE_PARAM(player->mSwimParams.mMoveSp, speedMultiplier);
-//    SCALE_PARAM(player->mSwimParams.mGravity, gravityMultiplier);
-//    SCALE_PARAM(player->mSwimParams.mRush, speedMultiplier);
-//    SCALE_PARAM(player->mSwimParams.mPaddleSpeedUp, speedMultiplier);
-//    SCALE_PARAM(player->mSwimParams.mPaddleJumpUp, speedMultiplier);
-//    SCALE_PARAM(player->mSwimParams.mPaddleDown, speedMultiplier);
-//    SCALE_PARAM(player->mHangFenceParams.mMoveSp, speedMultiplier);
-//    SCALE_PARAM(player->mHangFenceParams.mDescentSp, speedMultiplier);
-//    SCALE_PARAM(player->mDirtyParams.mSlipRunSp, speedMultiplier);
-//    SCALE_PARAM(player->mDirtyParams.mSlipCatchSp, speedMultiplier);
-//}
+//     SCALE_PARAM(player->mDeParams.mRunningMax, speedMultiplier);
+//     SCALE_PARAM(player->mDeParams.mDashMax, speedMultiplier);
+//     SCALE_PARAM(player->mDeParams.mClashSpeed,
+//                 speedMultiplier *
+//                     ((gFastDiveSetting.getBool() && isMario) || gFastTurboSetting.getBool()
+//                          ? 2.25f
+//                          : 1.0f));
+//     SCALE_PARAM(player->mJumpParams.mGravity, gravityMultiplier);
+//     SCALE_PARAM(player->mJumpParams.mSpinJumpGravity, gravityMultiplier);
+//     SCALE_PARAM(player->mJumpParams.mJumpSpeedAccelControl, speedMultiplier);
+//     SCALE_PARAM(player->mJumpParams.mPopUpSpeedY, jumpMultiplier);
+//     SCALE_PARAM(player->mJumpParams.mJumpingMax, jumpMultiplier);
+//     SCALE_PARAM(player->mJumpParams.mFenceSpeed, speedMultiplier);
+//     SCALE_PARAM(player->mJumpParams.mFireBackVelocity, jumpMultiplier);
+//     SCALE_PARAM(player->mJumpParams.mBroadJumpForceY, jumpMultiplier);
+//     SCALE_PARAM(player->mJumpParams.mRotateJumpForceY, jumpMultiplier);
+//     SCALE_PARAM(player->mJumpParams.mBackJumpForceY, jumpMultiplier);
+//     SCALE_PARAM(player->mJumpParams.mHipAttackSpeedY, gravityMultiplier);
+//     SCALE_PARAM(player->mJumpParams.mSuperHipAttackSpeedY, gravityMultiplier);
+//     SCALE_PARAM(player->mJumpParams.mRotBroadJumpForceY, jumpMultiplier);
+//     SCALE_PARAM(player->mJumpParams.mSecJumpForce, jumpMultiplier);
+//     SCALE_PARAM(player->mJumpParams.mUltraJumpForce, jumpMultiplier);
+//     SCALE_PARAM(player->mJumpParams.mTurnJumpForce, jumpMultiplier);
+//     SCALE_PARAM(player->mRunParams.mMaxSpeed, speedMultiplier);
+//     SCALE_PARAM(player->mRunParams.mAddBase, speedMultiplier);
+//     SCALE_PARAM(player->mRunParams.mDecBrake, speedMultiplier);
+//     SCALE_PARAM(player->mSwimParams.mMoveSp, speedMultiplier);
+//     SCALE_PARAM(player->mSwimParams.mGravity, gravityMultiplier);
+//     SCALE_PARAM(player->mSwimParams.mRush, speedMultiplier);
+//     SCALE_PARAM(player->mSwimParams.mPaddleSpeedUp, speedMultiplier);
+//     SCALE_PARAM(player->mSwimParams.mPaddleJumpUp, speedMultiplier);
+//     SCALE_PARAM(player->mSwimParams.mPaddleDown, speedMultiplier);
+//     SCALE_PARAM(player->mHangFenceParams.mMoveSp, speedMultiplier);
+//     SCALE_PARAM(player->mHangFenceParams.mDescentSp, speedMultiplier);
+//     SCALE_PARAM(player->mDirtyParams.mSlipRunSp, speedMultiplier);
+//     SCALE_PARAM(player->mDirtyParams.mSlipCatchSp, speedMultiplier);
+// }
 
 #undef SCALE_PARAM

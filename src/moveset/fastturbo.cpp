@@ -1,10 +1,10 @@
 #include <SMS/Player/Mario.hxx>
 
 #include <SMS/GC2D/GCConsole2.hxx>
-#include <SMS/Player/Watergun.hxx>
-#include <SMS/raw_fn.hxx>
 #include <SMS/MSound/MSound.hxx>
 #include <SMS/MSound/MSoundSESystem.hxx>
+#include <SMS/Player/Watergun.hxx>
+#include <SMS/raw_fn.hxx>
 
 #include <BetterSMS/libs/constmath.hxx>
 #include <BetterSMS/module.hxx>
@@ -109,10 +109,10 @@ SMS_PATCH_BL(SMS_PORT_REGION(0x80254990, 0, 0, 0), lerpTurboNozzleJumpSpeed);
 #define SCALE_PARAM(param, scale) param.set(param.get() * scale)
 
 struct TurboNozzleData {
-	f32 mRunningMax;
-	f32 mDashMax;
-	f32 mJumpingMax;
-	f32 mBroadJumpForce;
+    f32 mRunningMax;
+    f32 mDashMax;
+    f32 mJumpingMax;
+    f32 mBroadJumpForce;
 };
 
 BETTER_SMS_FOR_CALLBACK void initFastTurbo(TMario *player, bool isMario) {
@@ -140,7 +140,7 @@ static void resetTurboParams(Player::TPlayerData *playerData) {
 
     auto *data = reinterpret_cast<TurboNozzleData *>(
         Player::getRegisteredData(player, "movement__turbo_nozzle_data"));
-    
+
     playerData->mDefaultAttrs.mDeParams.mRunningMax.set(data->mRunningMax);
     playerData->mDefaultAttrs.mDeParams.mDashMax.set(data->mDashMax);
     playerData->mDefaultAttrs.mJumpParams.mJumpingMax.set(data->mJumpingMax);
@@ -152,7 +152,7 @@ static void resetTurboParams(Player::TPlayerData *playerData) {
 }
 
 static void scaleTurboParams(Player::TPlayerData *playerData) {
-    TMario *player                  = playerData->getPlayer();
+    TMario *player = playerData->getPlayer();
     SCALE_PARAM(playerData->mDefaultAttrs.mDeParams.mRunningMax, 2.25f);
     SCALE_PARAM(playerData->mDefaultAttrs.mDeParams.mDashMax, 2.25f);
     SCALE_PARAM(playerData->mDefaultAttrs.mJumpParams.mJumpingMax, 2.25f);
@@ -163,7 +163,7 @@ static void scaleTurboParams(Player::TPlayerData *playerData) {
     SCALE_PARAM(player->mJumpParams.mBroadJumpForce, 2.25f);
 }
 
-static void updateFastTurbo(TMario* player) {
+static void updateFastTurbo(TMario *player) {
     Player::TPlayerData *playerData = Player::getData(player);
     resetTurboParams(playerData);
     scaleTurboParams(playerData);

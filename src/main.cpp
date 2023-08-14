@@ -12,7 +12,7 @@
 #include "common.hxx"
 
 extern void onPlayerInit(TMario *, bool);
-//extern void onPlayerUpdate(TMario *, bool);
+// extern void onPlayerUpdate(TMario *, bool);
 
 extern void initFastTurbo(TMario *, bool);
 extern void updateTurboContext(TMario *, bool);
@@ -68,7 +68,7 @@ static void initModule() {
     BetterSMS::registerModule(&sModuleInfo);
 
     Player::registerInitCallback("_moveset_init", onPlayerInit);
-    //Player::registerUpdateCallback("_moveset_update", onPlayerUpdate);
+    // Player::registerUpdateCallback("_moveset_update", onPlayerUpdate);
     Player::registerInitCallback("_moveset_init_fast_turbo", initFastTurbo);
     Player::registerUpdateCallback("_moveset_update_turbo_usage", updateTurboContext);
     Player::registerUpdateCallback("_moveset_update_hover_burst", checkSpamHover);

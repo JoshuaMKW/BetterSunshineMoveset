@@ -95,7 +95,8 @@ BETTER_SMS_FOR_CALLBACK bool processCrouch(TMario *player) {
 
     // Check walls
     float normalThing = player->mFloorTriangle ? player->mFloorTriangle->mNormal.y : 0.0f;
-    TVec3f succ{player->mTranslation.x + (player->mSpeed.x * normalThing * 0.25f), player->mTranslation.y,
+    TVec3f succ{player->mTranslation.x + (player->mSpeed.x * normalThing * 0.25f),
+                player->mTranslation.y,
                 player->mTranslation.z + (player->mSpeed.z * normalThing * 0.25f)};
     player->checkGroundAtWalking(succ);
     player->checkCollision();

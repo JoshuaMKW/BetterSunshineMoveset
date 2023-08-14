@@ -1,12 +1,12 @@
+#include <SMS/MSound/MSound.hxx>
+#include <SMS/MSound/MSoundSESystem.hxx>
 #include <SMS/Player/Mario.hxx>
 #include <SMS/Player/Watergun.hxx>
 #include <SMS/raw_fn.hxx>
-#include <SMS/MSound/MSound.hxx>
-#include <SMS/MSound/MSoundSESystem.hxx>
 
+#include "common.hxx"
 #include <BetterSMS/module.hxx>
 #include <BetterSMS/player.hxx>
-#include "common.hxx"
 
 using namespace BetterSMS;
 

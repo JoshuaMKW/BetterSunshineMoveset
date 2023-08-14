@@ -1,17 +1,14 @@
 #pragma once
 
-#include <SMS/System/Params.hxx>
 #include <BetterSMS/player.hxx>
+#include <SMS/System/Params.hxx>
 
 struct PlayerMovementParams : public TParams {
     PlayerMovementParams()
-        : TParams(), SMS_TPARAM_INIT(mMaxJumps, 1),
-          SMS_TPARAM_INIT(mGravityMultiplier, 1.0f),
-          SMS_TPARAM_INIT(mSpeedMultiplier, 1.0f),
-          SMS_TPARAM_INIT(mBaseJumpMultiplier, 1.0f),
+        : TParams(), SMS_TPARAM_INIT(mMaxJumps, 1), SMS_TPARAM_INIT(mGravityMultiplier, 1.0f),
+          SMS_TPARAM_INIT(mSpeedMultiplier, 1.0f), SMS_TPARAM_INIT(mBaseJumpMultiplier, 1.0f),
           SMS_TPARAM_INIT(mMultiJumpMultiplier, 0.875f),
-          SMS_TPARAM_INIT(mMultiJumpFSpeedMulti, 0.9f),
-          SMS_TPARAM_INIT(mSlideMultiplier, 1.0f) {
+          SMS_TPARAM_INIT(mMultiJumpFSpeedMulti, 0.9f), SMS_TPARAM_INIT(mSlideMultiplier, 1.0f) {
         load("/mario/better_movement.prm");
     }
 
@@ -35,10 +32,12 @@ struct PlayerMovementData {
     f32 mSlideSpeedMultiplier;
 };
 
-inline PlayerMovementData *getPlayerMovementData(TMario* player) {
-	return reinterpret_cast<PlayerMovementData *>(Player::getRegisteredData(player, "_movement_data"));
+inline PlayerMovementData *getPlayerMovementData(TMario *player) {
+    return reinterpret_cast<PlayerMovementData *>(
+        Player::getRegisteredData(player, "_movement_data"));
 }
 
-inline PlayerMovementParams* getPlayerMovementParams(TMario* player) {
-	return reinterpret_cast<PlayerMovementParams *>(Player::getRegisteredData(player, "_movement_params"));
+inline PlayerMovementParams *getPlayerMovementParams(TMario *player) {
+    return reinterpret_cast<PlayerMovementParams *>(
+        Player::getRegisteredData(player, "_movement_params"));
 }
