@@ -54,7 +54,7 @@ BETTER_SMS_FOR_CALLBACK void checkSpamHover(TMario *player, bool isMario) {
     if ((player->mState & TMario::STATE_WATERBORN) || !playerData->getCanSprayFludd())
         return;
 
-    if (player->mController->mButtons.mAnalogR < 0.9f ||
+    if (player->mController->mButtons.mAnalogR < 0.8f ||
         !(player->mController->mFrameMeaning & 0x80))
         return;
 

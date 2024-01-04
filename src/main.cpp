@@ -65,38 +65,26 @@ static void initModule() {
     }
 
     // Register module
-    BetterSMS::registerModule(&sModuleInfo);
+    BetterSMS::registerModule(sModuleInfo);
 
-    Player::registerInitCallback("_moveset_init", onPlayerInit);
-    // Player::registerUpdateCallback("_moveset_update", onPlayerUpdate);
-    Player::registerInitCallback("_moveset_init_fast_turbo", initFastTurbo);
-    Player::registerUpdateCallback("_moveset_update_turbo_usage", updateTurboContext);
-    Player::registerUpdateCallback("_moveset_update_hover_burst", checkSpamHover);
-    Player::registerUpdateCallback("_moveset_update_rocket_dive", checkRocketNozzleDiveBlast);
-    Player::registerUpdateCallback("_moveset_update_multijump", checkForMultiJump);
-    Player::registerUpdateCallback("_moveset_update_crouch", checkForCrouch);
-    Player::registerUpdateCallback("_moveset_update_fall_damage", updateFallDamageContext);
+    Player::addInitCallback(onPlayerInit);
+    // Player::addUpdateCallback("_moveset_update", onPlayerUpdate);
+    Player::addInitCallback(initFastTurbo);
+    Player::addUpdateCallback(updateTurboContext);
+    Player::addUpdateCallback(checkSpamHover);
+    Player::addUpdateCallback(checkRocketNozzleDiveBlast);
+    Player::addUpdateCallback(checkForMultiJump);
+    Player::addUpdateCallback(checkForCrouch);
+    Player::addUpdateCallback(updateFallDamageContext);
     Player::registerStateMachine(MultiJumpState, processMultiJump);
     Player::registerStateMachine(CrouchState, processCrouch);
 }
 
-static void deinitModule() {
-    Player::deregisterInitCallback("_moveset_init_fast_turbo");
-    Player::deregisterInitCallback("_moveset_update_fast_turbo");
-    Player::deregisterUpdateCallback("_moveset_update_turbo_usage");
-    Player::deregisterUpdateCallback("_moveset_update_hover_burst");
-    Player::deregisterUpdateCallback("_moveset_update_rocket_dive");
-    Player::deregisterUpdateCallback("_moveset_update_crouch");
-    Player::deregisterStateMachine(CrouchState);
-
-    BetterSMS::deregisterModule(&sModuleInfo);
-}
 
 // Definition block
 KURIBO_MODULE_BEGIN("Better Sunshine Moveset", "JoshuaMK", "v1.0") {
     // Set the load and unload callbacks to our registration functions
     KURIBO_EXECUTE_ON_LOAD { initModule(); }
-    KURIBO_EXECUTE_ON_UNLOAD { deinitModule(); }
 }
 KURIBO_MODULE_END()
 
