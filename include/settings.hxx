@@ -211,6 +211,7 @@ extern Settings::SettingsGroup gSettingsGroup;
 extern LongJumpMappingSetting gLongJumpMappingSetting;
 extern LongJumpSetting gLongJumpSetting;
 extern Settings::SwitchSetting gBackFlipSetting;
+extern Settings::SwitchSetting gPoundJumpSetting;
 extern Settings::SwitchSetting gHoverBurstSetting;
 extern HoverSlideSetting gHoverSlideSetting;
 extern Settings::SwitchSetting gRocketDiveSetting;

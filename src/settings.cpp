@@ -7,6 +7,9 @@ LongJumpSetting gLongJumpSetting{};
 static bool sBackFlipActive = true;
 Settings::SwitchSetting gBackFlipSetting("Back Flip", &sBackFlipActive);
 
+static bool sPoundJumpActive = true;
+Settings::SwitchSetting gPoundJumpSetting("Ground Pound Jump", &sPoundJumpActive);
+
 static bool sHoverBurstActive = true;
 Settings::SwitchSetting gHoverBurstSetting("Hover Burst", &sHoverBurstActive);
 
