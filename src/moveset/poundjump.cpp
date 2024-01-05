@@ -15,7 +15,9 @@
 
 using namespace BetterSMS;
 
-u32 PoundJumpState = 0xF00001C2;
+u32 PoundJumpState = 0x88F;
+
+constexpr int PoundJumpAnimationID = 112;
 
 BETTER_SMS_FOR_CALLBACK void checkForPoundJump(TMario *player, bool isMario) {
     if (gpMarDirector->mCurState != TMarDirector::Status::STATE_NORMAL)
@@ -40,10 +42,24 @@ BETTER_SMS_FOR_CALLBACK void checkForPoundJump(TMario *player, bool isMario) {
     if (!(controller->mButtons.mFrameInput & TMarioGamePad::A))
         return;
 
+    player->mSpeed.y = 75.0f;
+    player->mTranslation.y += 20.0f;
+    player->startVoice(TMario::VOICE_TRIPLE_JUMP);
     player->changePlayerStatus(PoundJumpState, 0, false);
 }
 
 BETTER_SMS_FOR_CALLBACK bool processPoundJump(TMario *player) {
-    player->changePlayerStatus(TMario::STATE_TRIPLE_J, 0, false);
+    if (player->checkBackTrig())
+        return true;
+
+    if (player->rocketCheck())
+        return true;
+
+    if (player->mSpeed.y > 40 && (player->mSubStateTimer % 10) == 0) {
+        player->emitSmoke(0);
+    }
+
+    player->jumpingBasic(TMario::STATE_JMP_LAND, PoundJumpAnimationID, 0);
+    player->mSubStateTimer += 1;
     return true;
 }
