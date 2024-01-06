@@ -16,6 +16,7 @@
 using namespace BetterSMS;
 
 u32 CrouchState = 0xF00001C0;
+constexpr int CrouchAnimationID = 113;
 
 BETTER_SMS_FOR_CALLBACK void checkForCrouch(TMario *player, bool isMario) {
     if (gpMarDirector->mCurState != TMarDirector::Status::STATE_NORMAL)
@@ -106,6 +107,11 @@ BETTER_SMS_FOR_CALLBACK bool processCrouch(TMario *player) {
     player->mTranslation.add(player->mSpeed);
     player->mForwardSpeed *= 0.95;
 
-    player->setAnimation(TMario::ANIMATION_STEADY_STANCE, 1.0f);
+    int animationID = TMario::ANIMATION_STEADY_STANCE;
+    if (Player::isAnimationValid(CrouchAnimationID)) {
+        animationID = CrouchAnimationID;
+    }
+
+    player->setAnimation(animationID, 1.0f);
     return false;
 }
