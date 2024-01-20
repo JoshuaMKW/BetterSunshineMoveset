@@ -5,6 +5,7 @@
 
 #include <BetterSMS/memory.hxx>
 #include <BetterSMS/module.hxx>
+#include <BetterSMS/player.hxx>
 #include <BetterSMS/settings.hxx>
 
 using namespace BetterSMS;
@@ -129,15 +130,11 @@ public:
                         getKind());  // We manually update here to set instructions on load
     }
 
-    // clang-format off
-    static void valueChanged(void* old, void* cur, ValueKind kind) {
-        if (*reinterpret_cast<bool *>(cur) == false) {
-            PowerPC::writeU32(reinterpret_cast<u32 *>(SMS_PORT_REGION(0x803DCA00, 0x803D41E0, 0, 0)), 0x00300000 | TMarioAnimeData::FLUDD_DISABLED);
-        } else {
-            PowerPC::writeU32(reinterpret_cast<u32 *>(SMS_PORT_REGION(0x803DCA00, 0x803D41E0, 0, 0)), 0x00300000 | TMarioAnimeData::FLUDD_ENABLED);
-        }
+    static void valueChanged(void *old, void *cur, ValueKind kind) {
+        const u16 dive_anm_id = 136;
+        Player::setAnimationData(dive_anm_id, reinterpret_cast<bool *>(cur), nullptr, nullptr,
+                                 nullptr);
     }
-    // clang-format on
 
 private:
     bool mHoverSlideActive;
