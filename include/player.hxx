@@ -24,10 +24,11 @@ struct PlayerMovementParams : public TParams {
 };
 
 struct PlayerMovementData {
-    PlayerMovementData() : mCurJump(0), mIsLongJumping(false), mLastDropY(0.0f) {}
+    PlayerMovementData() : mCurJump(0), mIsLongJumping(false), mIsHoverBurstValid(true), mLastDropY(0.0f) {}
 
     u32 mCurJump;
     bool mIsLongJumping;
+    bool mIsHoverBurstValid;
     f32 mLastDropY;
     f32 mSlideSpeedMultiplier;
 };

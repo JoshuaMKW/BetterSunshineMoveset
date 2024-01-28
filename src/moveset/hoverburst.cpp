@@ -5,6 +5,7 @@
 #include <SMS/raw_fn.hxx>
 
 #include "common.hxx"
+#include "player.hxx"
 #include <BetterSMS/module.hxx>
 #include <BetterSMS/player.hxx>
 
@@ -41,15 +42,29 @@ BETTER_SMS_FOR_CALLBACK void checkSpamHover(TMario *player, bool isMario) {
     emitParams.mNum.set(1.0f);
     emitParams.mDirTremble.set(0.0f);
 
+    bool isTouchGround4cm = player->mTranslation.y - player->mFloorBelow <= 4.0f;
+    bool isWalkingRope =
+        (player->mState == 0x350 || player->mState == 0x10000357 || player->mState == 0x10000358);
+
+    bool isValidResetState = isTouchGround4cm || (player->mState & TMario::STATE_WATERBORN) ||
+                             (player->mState == TMario::STATE_NPC_BOUNCE) || isWalkingRope;
+                             
+    PlayerMovementData *moveData = getPlayerMovementData(player);
+    if (isValidResetState)
+        moveData->mIsHoverBurstValid = true;
+
+    if (!moveData->mIsHoverBurstValid)
+        return;
+
     auto *playerData = Player::getData(player);
-    bool isAlive     = playerData->getCanSprayFludd();
-    isAlive |= SMS_IsMarioTouchGround4cm__Fv();
-    isAlive |= (player->mState & TMario::STATE_WATERBORN);
-    isAlive |= (player->mState == TMario::STATE_NPC_BOUNCE);
-    isAlive |= (player->mState == 0x350 || player->mState == 0x10000357 ||
-                player->mState == 0x10000358);  // Ropes
-    isAlive |= (player->mState == 0x10100341);  // Pole Climb
-    playerData->setCanSprayFludd(isAlive);
+    //bool isAlive     = playerData->getCanSprayFludd();
+    //isAlive |= isTouchGround4cm;
+    //isAlive |= (player->mState & TMario::STATE_WATERBORN);
+    //isAlive |= (player->mState == TMario::STATE_NPC_BOUNCE);
+    //isAlive |= (player->mState == 0x350 || player->mState == 0x10000357 ||
+    //            player->mState == 0x10000358);  // Ropes
+    //isAlive |= (player->mState == 0x10100341);  // Pole Climb
+    //playerData->setCanSprayFludd(isAlive);
 
     if ((player->mState & TMario::STATE_WATERBORN) || !playerData->getCanSprayFludd())
         return;
@@ -86,5 +101,6 @@ BETTER_SMS_FOR_CALLBACK void checkSpamHover(TMario *player, bool isMario) {
     }
 
     playerData->setCanSprayFludd(false);
+    moveData->mIsHoverBurstValid = false;
     return;
 }

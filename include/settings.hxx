@@ -140,8 +140,6 @@ private:
     bool mHoverSlideActive;
 };
 
-SMS_WRITE_32(SMS_PORT_REGION(0x8038DC70, 0, 0, 0), 0x43160000);
-
 class FastTurboSetting final : public Settings::SwitchSetting {
 public:
     FastTurboSetting() : SwitchSetting("Fast Turbo", &mFastTurboActive), mFastTurboActive(true) {
