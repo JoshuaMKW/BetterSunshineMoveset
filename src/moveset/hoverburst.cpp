@@ -57,14 +57,6 @@ BETTER_SMS_FOR_CALLBACK void checkSpamHover(TMario *player, bool isMario) {
         return;
 
     auto *playerData = Player::getData(player);
-    //bool isAlive     = playerData->getCanSprayFludd();
-    //isAlive |= isTouchGround4cm;
-    //isAlive |= (player->mState & TMario::STATE_WATERBORN);
-    //isAlive |= (player->mState == TMario::STATE_NPC_BOUNCE);
-    //isAlive |= (player->mState == 0x350 || player->mState == 0x10000357 ||
-    //            player->mState == 0x10000358);  // Ropes
-    //isAlive |= (player->mState == 0x10100341);  // Pole Climb
-    //playerData->setCanSprayFludd(isAlive);
 
     if ((player->mState & TMario::STATE_WATERBORN) || !playerData->getCanSprayFludd())
         return;
