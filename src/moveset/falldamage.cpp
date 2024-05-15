@@ -15,7 +15,7 @@
 #include "player.hxx"
 #include "settings.hxx"
 
-using namespace BetterSMS::Geometry;
+using namespace BetterSMS;
 
 BETTER_SMS_FOR_CALLBACK void updateFallDamageContext(TMario *player, bool isMario) {
     if (gFallDamageSetting.getInt() == FallDamageSetting::MODE_NORMAL || !isMario)
@@ -57,8 +57,6 @@ static void dynamicFallDamage(TMario *player, int dmg, int type, int emitcount, 
         player->floorDamageExec(dmg, type, emitcount, tremble);
         return;
     }
-
-    auto playerData = Player::getData(player);
 
     dmg *= static_cast<int>((player->mLastGroundedPos.y - player->mTranslation.y) /
                             (player->mDeParams.mDamageFallHeight.get() / 1.5f));

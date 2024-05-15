@@ -13,7 +13,7 @@
 
 #include "common.hxx"
 
-using namespace BetterSMS::Geometry;
+using namespace BetterSMS;
 
 static void patchRoofCollisionSpeed(TMario *player, f32 _speed) {
     const TBGCheckData *roof = player->mRoofTriangle;

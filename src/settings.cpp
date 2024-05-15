@@ -10,6 +10,9 @@ Settings::SwitchSetting gBackFlipSetting("Back Flip", &sBackFlipActive);
 static bool sPoundJumpActive = true;
 Settings::SwitchSetting gPoundJumpSetting("Ground Pound Jump", &sPoundJumpActive);
 
+static bool sWaterPoundActive = true;
+Settings::SwitchSetting gWaterPoundSetting("Water Ground Pound", &sWaterPoundActive);
+
 static bool sHoverBurstActive = true;
 Settings::SwitchSetting gHoverBurstSetting("Hover Burst", &sHoverBurstActive);
 

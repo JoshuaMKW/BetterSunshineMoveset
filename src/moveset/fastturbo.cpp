@@ -153,14 +153,14 @@ static void resetTurboParams(Player::TPlayerData *playerData) {
 
 static void scaleTurboParams(Player::TPlayerData *playerData) {
     TMario *player = playerData->getPlayer();
-    SCALE_PARAM(playerData->mDefaultAttrs.mDeParams.mRunningMax, 2.25f);
-    SCALE_PARAM(playerData->mDefaultAttrs.mDeParams.mDashMax, 2.25f);
-    SCALE_PARAM(playerData->mDefaultAttrs.mJumpParams.mJumpingMax, 2.25f);
-    SCALE_PARAM(playerData->mDefaultAttrs.mJumpParams.mBroadJumpForce, 2.25f);
-    SCALE_PARAM(player->mDeParams.mRunningMax, 2.25f);
-    SCALE_PARAM(player->mDeParams.mDashMax, 2.25f);
-    SCALE_PARAM(player->mJumpParams.mJumpingMax, 2.25f);
-    SCALE_PARAM(player->mJumpParams.mBroadJumpForce, 2.25f);
+    SCALE_PARAM(playerData->mDefaultAttrs.mDeParams.mRunningMax, 1.625f);
+    SCALE_PARAM(playerData->mDefaultAttrs.mDeParams.mDashMax, 1.625f);
+    SCALE_PARAM(playerData->mDefaultAttrs.mJumpParams.mJumpingMax, 1.625f);
+    SCALE_PARAM(playerData->mDefaultAttrs.mJumpParams.mBroadJumpForce, 1.625f);
+    SCALE_PARAM(player->mDeParams.mRunningMax, 1.625f);
+    SCALE_PARAM(player->mDeParams.mDashMax, 1.625f);
+    SCALE_PARAM(player->mJumpParams.mJumpingMax, 1.625f);
+    SCALE_PARAM(player->mJumpParams.mBroadJumpForce, 1.625f);
 }
 
 static void updateFastTurbo(TMario *player) {

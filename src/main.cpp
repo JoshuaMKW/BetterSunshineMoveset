@@ -28,6 +28,10 @@ extern u32 PoundJumpState;
 extern void checkForPoundJump(TMario *, bool);
 extern bool processPoundJump(TMario *);
 
+extern u32 WaterPoundState;
+extern void checkForWaterPound(TMario *, bool);
+extern bool processWaterPound(TMario *);
+
 extern u32 MultiJumpState;
 extern void checkForMultiJump(TMario *, bool);
 extern bool processMultiJump(TMario *);
@@ -80,10 +84,12 @@ static void initModule() {
     Player::addUpdateCallback(checkForMultiJump);
     Player::addUpdateCallback(checkForCrouch);
     Player::addUpdateCallback(checkForPoundJump);
+    Player::addUpdateCallback(checkForWaterPound);
     Player::addUpdateCallback(updateFallDamageContext);
     Player::registerStateMachine(MultiJumpState, processMultiJump);
     Player::registerStateMachine(CrouchState, processCrouch);
     Player::registerStateMachine(PoundJumpState, processPoundJump);
+    Player::registerStateMachine(WaterPoundState, processWaterPound);
 }
 
 
