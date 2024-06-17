@@ -46,6 +46,8 @@ BETTER_SMS_FOR_CALLBACK void checkForPoundJump(TMario *player, bool isMario) {
     player->mTranslation.y += 20.0f;
     player->startVoice(TMario::VOICE_TRIPLE_JUMP);
     player->changePlayerStatus(PoundJumpState, 0, false);
+    player->mSubState      = 0;
+    player->mSubStateTimer = 0;
 }
 
 BETTER_SMS_FOR_CALLBACK bool processPoundJump(TMario *player) {
@@ -59,12 +61,15 @@ BETTER_SMS_FOR_CALLBACK bool processPoundJump(TMario *player) {
         player->emitSmoke(0);
     }
 
-    int animID = 77;
-    if (BetterSMS::Player::isAnimationValid(PoundJumpAnimationID)) {
+    bool customAnimExists = BetterSMS::Player::isAnimationValid(PoundJumpAnimationID);
+
+    int animID = 111;
+    if (customAnimExists) {
         animID = PoundJumpAnimationID;
     }
 
     player->jumpingBasic(TMario::STATE_JMP_LAND, animID, 0);
     player->mSubStateTimer += 1;
-    return true;
+
+    return false;
 }
