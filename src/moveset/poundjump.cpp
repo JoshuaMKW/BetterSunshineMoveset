@@ -59,7 +59,12 @@ BETTER_SMS_FOR_CALLBACK bool processPoundJump(TMario *player) {
         player->emitSmoke(0);
     }
 
-    player->jumpingBasic(TMario::STATE_JMP_LAND, PoundJumpAnimationID, 0);
+    int animID = 77;
+    if (BetterSMS::Player::isAnimationValid(PoundJumpAnimationID)) {
+        animID = PoundJumpAnimationID;
+    }
+
+    player->jumpingBasic(TMario::STATE_JMP_LAND, animID, 0);
     player->mSubStateTimer += 1;
     return true;
 }

@@ -54,12 +54,11 @@ BETTER_SMS_FOR_CALLBACK bool processWaterPound(TMario *player) {
     if (player->mFloorBelow > player->mTranslation.y - 10.0f) {
         player->mTranslation.y = player->mFloorBelow;
         if (player->mSpeed.y < -15.0f) {
-            player->changePlayerStatus(TMario::STATE_SLAM, 0, false);
             player->strongTouchDownEffect();
         } else {
-            player->changePlayerStatus(0x22D2, 0, false);
             player->smallTouchDownEffect();
         }
+        player->changePlayerStatus(0x22D1, 0, false);
         return true;
     }
 
@@ -84,6 +83,7 @@ BETTER_SMS_FOR_CALLBACK bool processWaterPound(TMario *player) {
         if (player->mSubStateTimer++ > 20) {
             player->mSubState      = 2;
             player->mSubStateTimer = 0;
+            MSoundSE::startSoundActor(0x1921, player->mTranslation, 0, nullptr, 0, 4);
         }
     }
 
@@ -92,7 +92,7 @@ BETTER_SMS_FOR_CALLBACK bool processWaterPound(TMario *player) {
         player->mSpeed.y *= 0.97f;
         if (fabsf(player->mSpeed.y) < 1.0f) {
             player->mSpeed.y = 0.0f;
-            player->changePlayerStatus(0x22D2, 0, false);
+            player->changePlayerStatus(0x22D1, 0, false);
             return true;
         }
     }

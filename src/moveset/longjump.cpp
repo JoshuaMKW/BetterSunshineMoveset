@@ -28,7 +28,6 @@ f32 calcJumpPower(TMario *player, f32 factor, f32 base, f32 jumpPower) {
     auto *stageConfig = Stage::getStageConfiguration();
 
     jumpPower *= params->mBaseJumpMultiplier.get();
-    jumpPower *= scaleLinearAtAnchor<f32>(player->mScale.y, 0.5f, 1.0f);
     if (player->mState & TMario::STATE_AIRBORN) {
         f32 multiplier = params->mMultiJumpMultiplier.get();
         for (u32 i = 1; i < moveData->mCurJump; ++i) {

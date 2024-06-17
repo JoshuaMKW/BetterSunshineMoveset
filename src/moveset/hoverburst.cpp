@@ -82,13 +82,13 @@ BETTER_SMS_FOR_CALLBACK void checkSpamHover(TMario *player, bool isMario) {
 
     if ((player->mState & 0x800000) == 0) {
         player->mState = TMario::STATE_HOVER_F;
-        player->mSpeed.y += (70.0f * player->mScale.y) - player->mSpeed.y;
+        player->mSpeed.y += 70.0f - Min(player->mSpeed.y, 70.0f);
         player->mJumpingState &= 0xFFFFFEFF;
     } else if (player->mState == TMario::STATE_DIVE) {
-        player->mSpeed.y += (35.0f * player->mScale.y) - player->mSpeed.y;
+        player->mSpeed.y += 35.0f - Min(player->mSpeed.y, 35.0f);
         player->mForwardSpeed += 15.0f;
     } else if (player->mState == TMario::STATE_DIVESLIDE) {
-        player->mSpeed.y += (35.0f * player->mScale.y) - player->mSpeed.y;
+        player->mSpeed.y += 35.0f - Min(player->mSpeed.y, 35.0f);
         player->mForwardSpeed += 30.0f;
     }
 
