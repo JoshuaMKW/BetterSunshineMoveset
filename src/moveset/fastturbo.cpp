@@ -73,8 +73,10 @@ SMS_PATCH_BL(SMS_PORT_REGION(0x80271AD8, 0, 0, 0), turboNozzleConeCondition2);
 SMS_WRITE_32(SMS_PORT_REGION(0x80271ADC, 0, 0, 0), 0x2C030000);
 
 static void lerpTurboNozzleSpeed(TMario *player, f32 velocity) {
+    auto *playerData = Player::getData(player);
+
     auto *controller = player->mController;
-    if (!controller || !gFastTurboSetting.getBool()) {
+    if (!controller || !gFastTurboSetting.getBool() || !playerData->isMario()) {
         player->setPlayerVelocity(velocity);
         return;
     }
@@ -92,8 +94,10 @@ static void lerpTurboNozzleJumpSpeed() {
     TMario *player;
     SMS_FROM_GPR(30, player);
 
+    auto *playerData = Player::getData(player);
+
     auto *controller = player->mController;
-    if (!controller || !gFastTurboSetting.getBool()) {
+    if (!controller || !gFastTurboSetting.getBool() || !playerData->isMario()) {
         player->mForwardSpeed = player->mJumpParams.mBroadJumpForce.get();
         player->mSpeed.y      = player->mJumpParams.mBroadJumpForceY.get();
         return;
@@ -187,7 +191,7 @@ BETTER_SMS_FOR_CALLBACK void updateTurboContext(TMario *player, bool isMario) {
 
     const auto analogR = player->mController->mButtons.mAnalogR;
 
-    fludd->mNozzleTurbo.mEmitParams.mNum.set(lerp<f32>(1.0f, 10.0f, analogR));
+    fludd->mNozzleTurbo.mEmitParams.mNum.set(lerp<f32>(1.0f, 7.0f, analogR));
     fludd->mNozzleTurbo.mEmitParams.mDirTremble.set(lerp<f32>(0.01f, 0.08f, analogR));
 
     if (analogR < 0.1f || fludd->mNozzleTurbo.mSprayState == TNozzleTrigger::DEAD) {

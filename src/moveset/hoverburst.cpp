@@ -8,6 +8,7 @@
 #include "player.hxx"
 #include <BetterSMS/module.hxx>
 #include <BetterSMS/player.hxx>
+#include <BetterSMS/settings.hxx>
 
 using namespace BetterSMS;
 
@@ -53,10 +54,15 @@ BETTER_SMS_FOR_CALLBACK void checkSpamHover(TMario *player, bool isMario) {
     if (isValidResetState)
         moveData->mIsHoverBurstValid = true;
 
+    Player::TPlayerData *playerData = Player::getData(player);
+
+    if (!BetterSMS::areExploitsPatched()) {
+        moveData->mIsHoverBurstValid = true;
+        playerData->setCanSprayFludd(true);
+    }
+
     if (!moveData->mIsHoverBurstValid)
         return;
-
-    auto *playerData = Player::getData(player);
 
     if ((player->mState & TMario::STATE_WATERBORN) || !playerData->getCanSprayFludd())
         return;
