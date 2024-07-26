@@ -7,6 +7,7 @@
 #include <BetterSMS/player.hxx>
 
 #include "player.hxx"
+#include <BetterSMS/libs/constmath.hxx>
 
 using namespace BetterSMS;
 
@@ -80,9 +81,8 @@ BETTER_SMS_FOR_CALLBACK bool processMultiJump(TMario *player) {
     const f32 stickMagnitude        = controller->mControlStick.mLengthFromNeutral;
 
     if (stickMagnitude > 0.1f) {
-        Player::rotateRelativeToCamera(
-            player, gpCamera,
-            {controller->mControlStick.mStickX, -controller->mControlStick.mStickY}, 1.0f);
+        player->mAngle.y = gpCamera->mHorizontalAngle +
+                           convertAngleFloatToS16(radiansToAngle(atan2f(controller->mControlStick.mStickX, -controller->mControlStick.mStickY)));
     }
 
     playerData->mIsLongJumping = false;
