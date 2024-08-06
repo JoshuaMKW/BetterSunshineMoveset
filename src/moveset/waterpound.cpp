@@ -125,3 +125,13 @@ static void thinkYoshiAnimationForWaterPound(TYoshi *yoshi) {
     yoshi->thinkAnimation();
 }
 SMS_PATCH_BL(SMS_PORT_REGION(0x8026E3A4, 0, 0, 0), thinkYoshiAnimationForWaterPound);
+
+
+
+static bool isLButtonCameraSpecifyModeExt(CPolarSubCamera *camera, s32 mode) {
+    if (mode == 7 || gpMarioAddress->mState == WaterPoundState) {
+        return true;
+    }
+    return false;
+}
+SMS_PATCH_B(SMS_PORT_REGION(0x80033BA4, 0, 0, 0), isLButtonCameraSpecifyModeExt);
