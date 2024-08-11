@@ -80,6 +80,7 @@ BETTER_SMS_FOR_CALLBACK void checkForMultiJump(TMario *player, bool isMario) {
     if ((player->mController->mButtons.mFrameInput & TMarioGamePad::EButtons::A) && jumpsLeft > 0 &&
         player->mState != TMario::STATE_WALLSLIDE && player->mState != TMario::STATE_F_KNCK_H) {
         player->changePlayerStatus(MultiJumpState, 0, false);
+        playerData->mLastDropY = player->mTranslation.y;
     }
 }
 

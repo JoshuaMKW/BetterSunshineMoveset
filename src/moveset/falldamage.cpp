@@ -38,6 +38,11 @@ BETTER_SMS_FOR_CALLBACK void updateFallDamageContext(TMario *player, bool isMari
         return;
     }
 
+    if (player->mState == TMario::STATE_HOVER) {
+        movementData->mLastDropY = player->mTranslation.y;
+        return;
+    }
+
     if (player->mState == 0xF000FFFF) {
         movementData->mLastDropY = player->mTranslation.y;
         return;
@@ -50,7 +55,7 @@ BETTER_SMS_FOR_CALLBACK void updateFallDamageContext(TMario *player, bool isMari
 }
 
 static f32 getTrueFloorContactSpeed(TMario *player) {
-    const f32 playerRotY    = f32(player->mAngle.y) / 182.0f;
+    const f32 playerRotY    = convertAngleS16ToFloat(player->mAngle.y);
     const Vec playerForward = {sinf(angleToRadians(-playerRotY)), 0.0f,
                                cosf(angleToRadians(playerRotY))};
     const Vec up            = {0.0f, 1.0f, 0.0f};
@@ -88,7 +93,8 @@ static void dynamicFallDamage(TMario *player, int dmg, int type, int emitcount, 
 
     const f32 terminalVelocity = -75.0f * player->mJumpParams.mGravity.get();
     const f32 trueContact      = getTrueFloorContactSpeed(player);
-    dmg                        = Max(static_cast<int>(dmg * (trueContact / terminalVelocity)), 1);
+    dmg                        = static_cast<int>(dmg * (trueContact / terminalVelocity));
+    dmg                        = Max(1, Min(dmg, player->mHealth - 1));
 
     if (dmg > 2) {
         type      = 0;  // shaky

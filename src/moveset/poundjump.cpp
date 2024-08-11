@@ -12,9 +12,11 @@
 #include <BetterSMS/player.hxx>
 
 #include "common.hxx"
+#include "player.hxx"
 
 using namespace BetterSMS;
 
+extern u32 MultiJumpState;
 u32 PoundJumpState = 0x88F;
 
 constexpr int PoundJumpAnimationID = 112;
@@ -61,6 +63,20 @@ BETTER_SMS_FOR_CALLBACK bool processPoundJump(TMario *player) {
         player->emitSmoke(0);
     }
 
+    if (player->mSubStateTimer > 5) {
+        if (auto *playerData = getPlayerMovementData(player)) {
+            if (auto *params = getPlayerMovementParams(player)) {
+                const s32 jumpsLeft = (params->mMaxJumps.get() - playerData->mCurJump);
+
+                if ((player->mController->mButtons.mFrameInput & TMarioGamePad::EButtons::A) &&
+                    jumpsLeft > 0) {
+                    player->changePlayerStatus(MultiJumpState, 0, false);
+                    playerData->mLastDropY = player->mTranslation.y;
+                }
+            }
+        }
+    }
+
     bool customAnimExists = BetterSMS::Player::isAnimationValid(PoundJumpAnimationID);
 
     int animID = 111;
@@ -68,7 +84,7 @@ BETTER_SMS_FOR_CALLBACK bool processPoundJump(TMario *player) {
         animID = PoundJumpAnimationID;
     }
 
-    player->jumpingBasic(TMario::STATE_JMP_LAND, animID, 0);
+    player->jumpingBasic(TMario::STATE_JMP_LAND, animID, 3);
     player->mSubStateTimer += 1;
 
     return false;
