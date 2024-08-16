@@ -25,7 +25,7 @@ BETTER_SMS_FOR_CALLBACK void onPlayerInit(TMario *player, bool isMario) {
     }
     Player::registerData(player, "_movement_params", params);
 
-    if (!isMario) {
+    if (!isMario || player->_388 != 0) {
         return;
     }
 

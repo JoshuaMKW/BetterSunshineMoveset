@@ -17,6 +17,10 @@ using namespace BetterSMS;
 f32 calcJumpPower(TMario *player, f32 factor, f32 base, f32 jumpPower) {
     base = Min(base, 100.0f);
 
+    if (player->_388 != 0) {
+        return Max(base, (base * factor) + jumpPower);
+    }
+
     auto *moveData = getPlayerMovementData(player);
     if (!moveData)
         return Max(base, (base * factor) + jumpPower);
@@ -48,7 +52,7 @@ static void setJumpOrLongJump(TMario *player, u32 state, u32 unk_0) {
     auto *moveData           = getPlayerMovementData(player);
     moveData->mIsLongJumping = false;
 
-    if (!moveData) {
+    if (!moveData || player->_388 != 0) {
         player->setStatusToJumping(state, unk_0);
         return;
     }
@@ -115,7 +119,7 @@ static void processJumpOrLongJump() {
     constexpr f32 LongJumpSpeedUp      = 50.0f;
 
     auto *moveData = getPlayerMovementData(player);
-    if (!moveData) {
+    if (!moveData || player->_388 != 0) {
         player->mSpeed.y = calcJumpPower(player, 0.25f, player->mForwardSpeed, 42.0f);
         return;
     }

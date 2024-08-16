@@ -14,13 +14,13 @@ using namespace BetterSMS;
 u32 MultiJumpState = 0xF00001C1;
 extern u32 PoundJumpState;
 
-BETTER_SMS_FOR_CALLBACK void checkStartInAir(TMario* player) {
-  const TBGCheckData* floor = nullptr;
-  f32 groundY = gpMapCollisionData->checkGround(
-    player->mTranslation.x, player->mTranslation.y + 80.0f, player->mTranslation.z, 0, &floor);
+BETTER_SMS_FOR_CALLBACK void checkStartInAir(TMario *player) {
+    const TBGCheckData *floor = nullptr;
+    f32 groundY               = gpMapCollisionData->checkGround(
+        player->mTranslation.x, player->mTranslation.y + 80.0f, player->mTranslation.z, 0, &floor);
 
-  if (fabsf(player->mTranslation.y - groundY) <= 10.0f) {
-      return;
+    if (fabsf(player->mTranslation.y - groundY) <= 10.0f) {
+        return;
     }
 
     auto *playerData = getPlayerMovementData(player);
@@ -55,13 +55,17 @@ BETTER_SMS_FOR_CALLBACK void checkForMultiJump(TMario *player, bool isMario) {
         player->mState == TMario::STATE_SLIP_JUMP || player->mState == TMario::STATE_THROWN ||
         player->mAttributes.mIsGameOver || player->mState == PoundJumpState;
 
-    bool isClimbState = (player->mState == 0x350 || player->mState == 0x10000357 ||
-                         player->mState == 0x10000358);                          // Ropes
-    isClimbState |= (player->mState == 0x10100341);                              // Pole Climb
+    OSReport("Player state: %08X\n", player->mState);
+
+    bool isRopeState =
+        (player->mState == 0x350 || player->mState == 0x351 || player->mState == 0x352 ||
+         player->mState == 0x353 || player->mState == 0x35B || player->mState == 0x35C ||
+         player->mState == 0x10000357 || player->mState == 0x10000358);
+    bool isClimbState = (player->mState == 0x10100341);                          // Pole Climb
     isClimbState |= (player->mState & 0x30000000) != 0;                          // Ladder climbs
     isClimbState |= (player->mState == 0x200349 || player->mState == 0x20054A);  // Roof climbs;
 
-    if (isInvalidState || isClimbState) {
+    if (isInvalidState || isClimbState || isRopeState) {
         playerData->mCurJump = 1;
         return;
     }

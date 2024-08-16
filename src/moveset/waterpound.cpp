@@ -24,7 +24,8 @@ BETTER_SMS_FOR_CALLBACK void checkForWaterPound(TMario *player, bool isMario) {
     if (!isMario || !gWaterPoundSetting.getBool())
         return;
 
-    if (player->mState == WaterPoundState || !(player->mState & TMario::STATE_WATERBORN))
+    if (player->mState == WaterPoundState || !(player->mState & TMario::STATE_WATERBORN) ||
+        player->mAttributes.mIsFluddEmitting)
         return;
 
     auto *controller = player->mController;
