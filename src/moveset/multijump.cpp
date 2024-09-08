@@ -55,8 +55,6 @@ BETTER_SMS_FOR_CALLBACK void checkForMultiJump(TMario *player, bool isMario) {
         player->mState == TMario::STATE_SLIP_JUMP || player->mState == TMario::STATE_THROWN ||
         player->mAttributes.mIsGameOver || player->mState == PoundJumpState;
 
-    OSReport("Player state: %08X\n", player->mState);
-
     bool isRopeState =
         (player->mState == 0x350 || player->mState == 0x351 || player->mState == 0x352 ||
          player->mState == 0x353 || player->mState == 0x35B || player->mState == 0x35C ||

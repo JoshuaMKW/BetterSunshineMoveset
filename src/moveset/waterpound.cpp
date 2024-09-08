@@ -116,7 +116,8 @@ static void thinkYoshiAnimationForWaterPound(TYoshi *yoshi) {
         yoshi->thinkBtp(bckId);
 
         u32 *anmSound = *(u32 **)(((u8 *)yoshi) + 0x11C);
-        initAnmSound__9MAnmSoundFPvUlf(*(MAnmSound**)(((u8 *)yoshi) + 0x118), *(u32**)(anmSound + bckId), 1, 0.0f);
+        initAnmSound__9MAnmSoundFPvUlf(*(MAnmSound **)(((u8 *)yoshi) + 0x118),
+                                       *(u32 **)(anmSound + bckId), 1, 0.0f);
         if (yoshi->mActor->mBckInfo) {
             yoshi->mActor->mBckInfo->setMotionBlendRatio(0.0f);
         }
@@ -127,12 +128,10 @@ static void thinkYoshiAnimationForWaterPound(TYoshi *yoshi) {
 }
 SMS_PATCH_BL(SMS_PORT_REGION(0x8026E3A4, 0, 0, 0), thinkYoshiAnimationForWaterPound);
 
-
-
-static bool isLButtonCameraSpecifyModeExt(CPolarSubCamera *camera, s32 mode) {
-    if (mode == 7 || gpMarioAddress->mState == WaterPoundState) {
-        return true;
+static u32 getMarioCameraStatus() {
+    if (gpMarioAddress->mState == WaterPoundState) {
+        return 0x8008A9;
     }
-    return false;
+    return gpMarioAddress->mState;
 }
-SMS_PATCH_B(SMS_PORT_REGION(0x80033BA4, 0, 0, 0), isLButtonCameraSpecifyModeExt);
+SMS_PATCH_BL(SMS_PORT_REGION(0x80021E5C, 0, 0, 0), getMarioCameraStatus);

@@ -68,10 +68,21 @@ static void setJumpOrLongJump(TMario *player, u32 state, u32 unk_0) {
         return;
     }
 
+    if (player->mTranslation.y - player->mFloorBelow > 10.0f) {
+        player->setStatusToJumping(state, unk_0);
+        return;
+    }
+
     if ((player->mState & TMario::STATE_AIRBORN) != 0 ||
         (player->mState & TMario::STATE_WATERBORN) != 0 ||
         player->mState == TMario::STATE_DIVESLIDE || player->onYoshi() ||
+        player->mState == 0x80000588 || player->mState == 0x820008AB ||
         player->mState == 0xF00001C1) /* Multi jump */ {
+        player->setStatusToJumping(state, unk_0);
+        return;
+    }
+
+    if (player->mState == 0x810446) /* Blooper */ {
         player->setStatusToJumping(state, unk_0);
         return;
     }
