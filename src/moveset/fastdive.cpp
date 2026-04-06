@@ -18,7 +18,7 @@ static void uncapDiveSpeed(f32 diveSpeed) {
 
     auto *playerData = Player::getData(player);
 
-    if (gFastDiveSetting.getBool() && playerData->isMario() && player->_388 == 0) {
+    if (gFastDiveSetting.getBool() && playerData->isMario()) {
         auto *params = getPlayerMovementParams(player);
         if ((player->mState & TMario::STATE_AIRBORN)) {
             player->mForwardSpeed =
@@ -39,7 +39,7 @@ static void uncapDiveRolloutSpeed() {
 
     auto *playerData = Player::getData(player);
 
-    if (gFastDiveSetting.getBool() && playerData->isMario() && player->_388 == 0)
+    if (gFastDiveSetting.getBool() && playerData->isMario())
         player->mForwardSpeed =
             Max(player->mJumpParams.mRotBroadJumpForce.get(), player->mForwardSpeed);
     else
@@ -53,7 +53,7 @@ static void uncapDiveAirSpeed(f32 speed) {
 
     auto *playerData = Player::getData(player);
 
-    if (!gFastDiveSetting.getBool() || !playerData->isMario() || player->_388 != 0)
+    if (!gFastDiveSetting.getBool() || !playerData->isMario())
         player->setPlayerVelocity(speed);
 }
 SMS_PATCH_BL(SMS_PORT_REGION(0x802496AC, 0, 0, 0), uncapDiveAirSpeed);

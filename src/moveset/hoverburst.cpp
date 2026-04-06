@@ -105,3 +105,26 @@ BETTER_SMS_FOR_CALLBACK void checkSpamHover(TMario *player, bool isMario) {
     moveData->mIsHoverBurstValid = false;
     return;
 }
+
+BETTER_SMS_FOR_CALLBACK void checkForCameraDemoHover(TMarDirector *director) {
+    PlayerMovementData *moveData = getPlayerMovementData(gpMarioAddress);
+
+    if (!moveData->mIsPreservedHover && gpMarioAddress->mFluddUsageState == 0 &&
+        gpCamera->getRestDemoFrames() > 0) {
+        moveData->mIsPreservedHover = true;
+    }
+}
+
+static TMarioControllerWork* getMarioControllerWorkForKeepHover() {
+    TMario *player;
+    SMS_FROM_GPR(31, player);
+
+    PlayerMovementData *moveData = getPlayerMovementData(player);
+
+    player->mController->_B0 = player->mController->mButtons.mTriggerL;
+    player->mController->_B4 = player->mController->mButtons.mTriggerR;
+    player->checkController(nullptr);
+
+    return player->mControllerWork;
+}
+SMS_PATCH_BL(SMS_PORT_REGION(0x8026231C, 0, 0, 0), getMarioControllerWorkForKeepHover);

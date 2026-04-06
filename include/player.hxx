@@ -29,6 +29,7 @@ struct PlayerMovementData {
     u32 mCurJump;
     bool mIsLongJumping;
     bool mIsHoverBurstValid;
+    bool mIsPreservedHover;
     f32 mLastDropY;
     f32 mSlideSpeedMultiplier;
 };
