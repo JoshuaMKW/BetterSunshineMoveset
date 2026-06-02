@@ -12,6 +12,10 @@
 #include "common.hxx"
 
 BETTER_SMS_FOR_CALLBACK void checkRocketNozzleDiveBlast(TMario *player, bool isMario) {
+    if (!isMario) {
+        return;
+    }
+
     TWaterGun *fludd = player->mFludd;
     if (!fludd || !gRocketDiveSetting.getBool())
         return;

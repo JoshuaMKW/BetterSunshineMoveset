@@ -166,6 +166,10 @@ SMS_WRITE_32(SMS_PORT_REGION(0x80254544, 0x8024c2d0, 0, 0), 0x60000000);
 static bool checkDivingWhenLongJumping(TMario *player) {
     const bool onYoshi = player->onYoshi();
 
+    auto *bsmsData     = Player::getData(player);
+    if (!bsmsData->isMario())
+        return onYoshi;
+
     auto *moveData = getPlayerMovementData(player);
     if (!moveData)
         return onYoshi;
@@ -176,6 +180,10 @@ SMS_PATCH_BL(SMS_PORT_REGION(0x8024C394, 0x80244120, 0, 0), checkDivingWhenLongJ
 
 static bool checkRotatingWhenLongJumping(TMario *player, int *unk_0) {
     const bool rotated = player->checkStickRotate(unk_0);
+
+    auto *bsmsData = Player::getData(player);
+    if (!bsmsData->isMario())
+        return rotated;
 
     auto *moveData = getPlayerMovementData(player);
     if (!moveData)
@@ -190,6 +198,10 @@ static bool checkQuickFallWhenLongJumping() {
     SMS_FROM_GPR(30, player);
 
     const bool slowFalling = ((player->mActionState & 0x80) != 0);
+
+    auto *bsmsData = Player::getData(player);
+    if (!bsmsData->isMario())
+        return slowFalling;
 
     auto *moveData = getPlayerMovementData(player);
     if (!moveData)

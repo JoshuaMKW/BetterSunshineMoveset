@@ -41,9 +41,7 @@ BETTER_SMS_FOR_CALLBACK void onPlayerInit(TMario *player, bool isMario) {
     SCALE_PARAM(player->mDeParams.mDashMax, speedMultiplier);
     SCALE_PARAM(player->mDeParams.mClashSpeed,
                 speedMultiplier *
-                    ((gFastDiveSetting.getBool() && isMario) || gFastTurboSetting.getBool()
-                         ? 2.25f
-                         : 1.0f));
+                    (gFastDiveSetting.getBool() || gFastTurboSetting.getBool() ? 2.25f : 1.0f));
     SCALE_PARAM(player->mJumpParams.mGravity, gravityMultiplier);
     SCALE_PARAM(player->mJumpParams.mSpinJumpGravity, gravityMultiplier);
     SCALE_PARAM(player->mJumpParams.mJumpSpeedAccelControl, speedMultiplier);
